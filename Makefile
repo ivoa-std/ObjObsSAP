@@ -18,15 +18,15 @@ AUTHOR_EMAIL=jesusjuansalgado@gmail.com
 
 # Source files for the TeX document (but the main file must always
 # be called $(DOCNAME).tex
-SOURCES = $(DOCNAME).tex role_diagram.pdf
+SOURCES = $(DOCNAME).tex
 
 # List of image files to be included in submitted package (anything that
 # can be rendered directly by common web browsers)
-FIGURES = role_diagram.svg
+FIGURES = role_diagram.pdf
 
 # List of PDF figures (figures that must be converted to pixel images to
 # work in web browsers).
-VECTORFIGURES =
+VECTORFIGURES = role_diagram.svg
 
 # Additional files to distribute (e.g., CSS, schema files, examples...)
 AUX_FILES =

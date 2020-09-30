@@ -1,3 +1,5 @@
+[![PDF-Preview](https://img.shields.io/badge/PDF-Preview-blue)](https://github.com/ivoa-std/ObjVisSAP/releases/download/auto-pdf-preview/ObjVisSAP-draft.pdf)
+
 # ObjVisSAP - Object Visibility Simple Access Protocol
 
 The Object Visibility Simple Access Protocol (ObjVisSAP) is an IVOA Data
