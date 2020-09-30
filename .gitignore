@@ -1,0 +1,12 @@
+**/*.aux
+**/*.bbl
+**/*.bcf
+**/*.blg
+**/*.dvi
+**/*.log
+**/*.out
+**/ObsLocTAP.synctex.gz
+**/ObsLocTAP.ps
+**/ObsLocTAP.pdf
+**/ObsLocTAP.fls
+**/ObsLocTAP.fdb_latexmk

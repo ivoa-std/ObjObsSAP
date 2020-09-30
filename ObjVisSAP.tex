@@ -1,0 +1,884 @@
+\documentclass[11pt,a4paper]{ivoa}
+%\input tthdefs
+
+\usepackage{listings}
+\lstloadlanguages{sh,make,[latex]tex}
+\lstset{flexiblecolumns=true,numberstyle=\small,showstringspaces=False,
+  identifierstyle=\texttt,defaultdialect=[latex]tex,language=tex}
+
+\usepackage{todonotes}
+\usepackage{float}
+\restylefloat{table}
+\usepackage{placeins}
+\usepackage{adjustbox}
+\usepackage{lscape}
+\usepackage[title]{appendix}
+
+\usepackage[english]{babel}
+
+%Import the natbib package and sets a bibliography  and citation styles
+%\usepackage{natbib}
+%\bibliographystyle{abbrvnat}
+
+
+\usepackage[utf8]{inputenc}
+
+\usepackage{booktabs,xcolor,siunitx}
+\definecolor{texcolor}{rgb}{0.4,0.1,0.1}
+\definecolor{lightgray}{gray}{0.9}
+
+\lstloadlanguages{SQL}
+\lstset{flexiblecolumns=true,basicstyle=\ttfamily}
+
+%\iftth
+%  \newcommand{\BibTeX}{BibTeX}
+%\fi
+
+\newcommand{\comicstuff}[1]{
+    \begin{html}<span class="comic">#1</span>\end{html}}
+\customcss{custom.css}
+
+\title{Object Visibility Simple Access Protocol}
+
+\ivoagroup{Data Access Layer Group}
+
+
+\author{Aitor Ibarra}
+\author{Richard Saxton}
+\author{Jesús Salgado}
+\author{Matthias Ehle}
+\author{Carlos Gabriel}
+\author{James Dempsey}
+\author{Markus Demleitner}
+\author{María Díaz Trigo}
+\author{Jaime Kennea}
+\author{Mark Kettenis}
+\author{Peter Kretschmar}
+\author{Erik Kuulkers}
+\author{Giorgio Matt}
+\author{Bruno Merín}
+\author{Marco Molinaro}
+\author{Jan-Uwe Ness}
+\author{Julian Osborne}
+\author{Emma de Oña Wilhelmi}
+\author{Edward J. Salbol}
+\author{Emilio Salazar}
+\author{Celia Sánchez}
+\author{Richard Saxton}
+\author{Gregory Sivakoff}
+\author{Lian Tao}
+\author{Aaron Tohuvavohu}
+\author{Bill Workman}
+
+\editor{Aitor Ibarra}
+\editor{Richard Saxton}
+\editor{Jesús Salgado}
+
+\begin{document}
+
+\begin{abstract}
+The Object Visibility Simple Access Protocol (ObjVisSAP) is an IVOA Data
+Access protocol which defines the standard for retrieving object
+constraint-free visibility time intervals through a uniform interface within
+the VO framework for given object coordinates to be observed by a given
+Astronomical Observatory. The ObjVisSAP services can be registered in an
+IVOA Registry of Resources using the VOResource, Extension standard, having
+a unique ResourceIdentifier in the registry. The ObjVisSAP interface is
+meant to be reasonably simple to be implemented by service providers. A
+basic query will be done introducing a set of sky coordinates and a given
+time period (optional). The service returns a list of constraint-free
+visibility time intervals formatted as VOTable. Thus, an implementation of
+the service may support additional search parameters (some of which may be
+custom to that particular service) to more finely control the selection of
+the visibility periods. The specification also describes how the search on
+extra parameters has to be done.
+\end{abstract}
+
+\section*{Acknowledgments}
+The authors acknowledge the comments from Observatories members and
+from the IVOA members in general.
+
+
+\section*{Conformance-related definitions}
+
+The words ``MUST'', ``SHALL'', ``SHOULD'', ``MAY'', ``RECOMMENDED'', and
+``OPTIONAL'' (in upper or lower case) used in this document are to be
+interpreted as described in IETF standard RFC2119 (\citep{std:RFC2119}).
+
+The \emph{Virtual Observatory (VO)} is a
+general term for a collection of federated resources that can be used
+to conduct astronomical research, education, and outreach.
+The \href{http://www.ivoa.net}{International
+Virtual Observatory Alliance (IVOA)} is a global
+collaboration of separately funded projects to develop standards and
+infrastructure that enable VO applications.
+
+\section*{Link to IVOA Architecture}
+The figure below shows where ObjVisSAP protocol fits within the
+IVOA architecture:
+
+%%%%%%%%%%%%%%%%%%%% Figure/Image No: 1 starts here %%%%%%%%%%%%%%%%%%%%
+
+\begin{figure}[H]
+\advance\leftskip 0.0in
+\includegraphics[width=6.0in,height=4.73in]{./role_diagram.pdf}
+\end{figure}
+
+
+%%%%%%%%%%%%%%%%%%%% Figure/Image No: 1 Ends here %%%%%%%%%%%%%%%%%%%%
+\pagebreak
+
+
+
+\section{Introduction}\label{section:_Toc415497365}
+
+
+The Object Visibility Simple Access Protocol (ObjVisSAP henceforth)
+specifies in a standard format the services to retrieve object
+visibility from astronomical observatories.
+
+
+
+The ObjVisSAP interface has intentionally been made similar to the SSAP
+(\cite{std:SSAP}) and SIAP v2.0 (\cite{std:SIAP}) through the adoption
+of current IVOA Data Access Layer Interface (DALI) and Observation Data
+Model Core Components (\cite{std:OBSCORE}) and its implementation in
+the Table Access Protocol. ObjVisSAP services also support
+VOSI-availability and VOSI-capabilities resources.
+
+
+
+\begin{itemize}
+\item queries encoded as URLs,
+\item the use of VOTable for encoding search results,
+\item the mechanism for handling errors, and
+\item the retrieval of service metadata.
+\end{itemize}
+
+
+\subsection{The Role in the IVOA Architecture}
+ObjVisSAP specifies standardID values \citep{std:VOID2} for each
+capability, as defined by VODataService \citep{std:VOR}. ObjVisSAP
+services may be registered in an IVOA Registry using the SimpleDALRegExt
+\citep{DALREGEXT} extension schema.
+
+
+\section{Requirements for Compliance}
+The object visibility query web method \textbf{MUST} be supported as
+in this section. Through this web method, clients search for visibility
+periods based on given sky coordinates and a time period (optional). The
+response is a VOTable that describes the constraint-free visibility time
+windows. Other output formats can be specified by the RESPONSEFORMAT
+parameter (see ).
+
+\subsection{Compliance}
+The keywords \textbf{MUST}, \textbf{REQUIRED}, \textbf{SHOULD},
+and \textbf{MAY} as used in this document are to be interpreted as
+described in RFC 2119.
+
+An implementation is compliant if it satisfies all the \textbf{MUST}
+or \textbf{REQUIRED} level requirements for the protocols it
+implements. An implementation that satisfies all the \textbf{MUST} or
+\textbf{REQUIRED} level and all the \textbf{SHOULD} level
+requirements for its protocols is said to be "unconditionally
+compliant"; one that satisfies all the \textbf{MUST} level
+requirements but not all the \textbf{SHOULD} level requirements for
+its protocols is said to be "conditionally compliant".
+
+\section{Resources}
+The purpose of the object visibility query is to allow users/clients to
+check if a given set of sky coordinates are visible for a given time
+period. We define "\,visible" as the time interval suitable to perform
+scientific observations. We therefore, leave to the observatories to
+define when exactly an object is visible for scientific observations.
+
+The most basic query parameters will be the sky coordinates (Right
+Ascension and Declination), both coordinates must be expressed following
+the ICRS coordinate system and the start time and stop time for the
+visibility checks (optional). Any additional parameters may be used to
+customize the visibility checks.
+
+The ObjVisSAP service have been designed to follow the DALI-sync
+specification.
+
+\begin{table}[h]
+\centering
+\begin{tabular}{|l|l|l|}
+\hline
+\textbf{resource type} & \textbf{resource name} & \textbf{required
+} \\
+\hline
+\{query\} & service specific & yes \\
+\hline
+DALI-examples & /examples & no \\
+\hline
+VOSI-availability & /availability & yes \\
+\hline
+VOSI-capabilities & /capabilities & yes \\
+\hline
+\end{tabular}
+\caption{ObjVisSAP service resources}
+\end{table}
+The ObjVisSAP service must have at least one \{query\} resource.
+
+\subsection{\{query\} resource}
+The \{query\} resource is a synchronous web service resource that
+follows the DALI-sync description . The name and the path of the
+resource is up to the implementer. The functionality to find the
+resource path will be implemented using the VOSI-capabilities
+resource.
+
+As a DALI-sync resource, the parameters for a request may be submitted
+using an HTTP GET (query string) or POST action.
+
+Object Visibility services advertise their availability as described in
+the DALI standard. This system must provide mechanisms to fully
+characterize the service, including its non-compulsory and additional
+parameters.
+
+All parameters for the \{query\} resource are described below. Some of
+these parameters are \textbf{MANDATORY }and others not, depending on
+the astronomical facility characteristics. For example, \textbf{
+elevation} input parameter may only be used for ground-based
+observatories.
+
+Parameters may appear in any order. If the same parameter appears
+multiple times in a request, the operation is undefined (if alternate
+values for a parameter are desired, the range-list syntax may be used
+instead). Parameter names are case-insensitive. Parameter values are
+case-sensitive unless defined otherwise in the description of an
+individual parameter.
+
+The following subsections define reserved parameters. In addition to the
+description of the functional role the parameter plays in constraining a
+query, each definition also includes, when applicable, a UCD and/or
+UType that indicates the semantic meaning of the parameter. The UType
+names refer to those defined in the ObsCore Data Model .
+
+Some of the parameters proposed in this standard are not described in
+the ObsCore Data Model document , such as; min\_vis, max\_vis,
+elevation, moon\_sep. We tried to describe these parameters following
+the ObsCore standard.
+
+\subsubsection{Required parameters}
+A service must support the input parameters described in this section.
+That means that the service must accept them as valid ones without
+raising an error, and the parameters must be properly used to constrain
+the query.
+
+As described in this section, the only mandatory parameters are the
+Right Ascension and Declination of the point in the sky to check for
+constraint-free time intervals. In this case, the service will return
+all possible time intervals where the point in the sky is visible. The
+time span covered by each astronomical observatory will depend on the
+characteristics of each scientific instrument. For example, time spam
+covered by ground based optical telescopes will be larger than time spam
+covered by Low Earth Orbit observatories, where the satellite orbital
+elements changes frequently.
+
+\begin{itemize}
+\item{\textbf{MAXREC}\\MAXREC parameter is defined in DALI and allows
+the client to limit the number or records in the response. A service
+implementation may also impose default and maximum values for this limit.
+However, the limit is determined, if the output is truncated due to the
+limit the server must indicate this using an overflow (section 4.1)
+indicator except in the special case of MAXREC=0, where the service
+respond with metadata-only (normal output document with no records).}
+
+\item{\textbf{UPLOAD}\\DALI UPLOAD parameter is not used by this version
+of ObjVisSAP. The use case of uploading lists of coordinates is covered
+by the multiple-valued parameters values.}
+
+\item{\textbf{POS}\\Position in the sky to check the visibility. The coordinate
+values are specified in list format (comma separated) with no embedded white
+space.\\
+Example:\\
+%%%%%%%%%%%%%%%%%%%% starts here %%%%%%%%%%%%%%%%%%%%
+\begin{lstlisting}[language=SQL]
+POS=52,-27.8
+\end{lstlisting}
+%%%%%%%%%%%%%%%%%%%% ends here %%%%%%%%%%%%%%%%%%%%
+\par
+POS defaults to right-ascension and declination in decimal degrees in
+the ICRS coordinate system. This parameter has been defined in line with
+other IVOA S*APs protocols although the optional coordinate system has
+been removed for simplicity.}
+
+\item{\textbf{T\_MIN}\\The service \textbf{MUST }support the
+\textbf{T\_MIN }parameter, to specify the start time to check for object
+visibility. The \textbf{T\_MIN }parameter has to be specified following
+ObsCore data model. The unit of \textbf{T\_MIN} parameter must be
+expressed in MJD. If the query does not specify \textbf{T\_MIN}, the service
+should default to NOW.}
+
+\item{\textbf{T\_MAX}\\The service \textbf{MUST }support the \textbf{T\_MAX }
+parameter, to specify the end time to check for object visibility. The
+\textbf{T\_MAX} parameter has to be specified following ObsCore data model.
+The unit of \textbf{T\_MAX} parameter must be expressed in MJD.\\
+%%%%%%%%%%%%%%%%%%%% starts here %%%%%%%%%%%%%%%%%%%%
+\begin{table}[h]
+\centering
+\begin{tabular}{|l|l|}
+\hline
+\begin{lstlisting}[language=SQL]
+http://xmmvischeck.esac.esa.int:8080/objvissap/query?
+POS=10.68,41.27&T_MAX=59522
+\end{lstlisting}
+\\
+\hline
+\end{tabular}
+\end{table}
+%%%%%%%%%%%%%%%%%%%% ends here %%%%%%%%%%%%%%%%%%%%
+to query for object visibility of the coordinate (10.68,41,27) and end
+time for the periods minor than 11-April-2021.\par
+Calculation of the visibility by different observatories is only defined
+for a certain future time range. That implies that there could be
+\textbf{a T\_MAX hard limit} defined by the service that could be
+smaller than the \textbf{T\_MAX} value invoked by the client. If this
+is the case, the information of the use of this T\_MAX hard limit MAY be
+included in a certain $<$INFO$>$ VOTable tag in the service response
+like:
+%%%%%%%%%%%%%%%%%%%% starts here %%%%%%%%%%%%%%%%%%%%
+\begin{lstlisting}[language=SQL]
+<INFO name="T_MAX_HARD_LIMIT" value="61231"/>
+\end{lstlisting}
+%%%%%%%%%%%%%%%%%%%% ends here %%%%%%%%%%%%%%%%%%%%
+}
+\end{itemize}
+
+See \textit{Successful Response} section for more info about valid
+VOTable res\-pon\-ses.
+
+\subsubsection{Non-compulsory Parameters}
+The next list of non-compulsory parameters may be implemented on the
+server side. These parameters should be treated as reserved keywords.
+
+\begin{itemize}
+\item{\textbf{VIS\_MIN}\\A service \textbf{MAY} have a search parameter
+called \textbf{VIS\_MIN}. This parameter would constrain the visibility
+check to those time periods with at least the minimum visibility specified
+in the parameter. The unit of \textbf{VIS\_MIN} parameters must be expressed
+in seconds.\par
+\textbf{Example:} The input parameter listing below from the Object
+Visibility Simple Access Protocol shows that in addition to supporting
+the required parameters (POS, T\_MIN, T\_MAX), it also supports the free
+parameter VIS\_MIN.
+%%%%%%%%%%%%%%%%%%%% starts here %%%%%%%%%%%%%%%%%%%%
+\begin{lstlisting}[language=XML]
+<?xml version="1.0" encoding="UTF-8"?>
+<VOTABLE xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+xsi:noNamespaceSchemaLocation="xmlns:http://www.ivoa.net/xml/
+VOTable/VOTable-1.1.xsd"
+xmlns:ovdm="http://www.ivoa.net/xml/ObjectVisibilityDM/
+ObjectVisibilityDM-v1.0.xsd" version="1.0">
+<RESOURCE type="results">
+<DESCRIPTION>
+Object Visibility Simple Access Protocol
+</DESCRIPTION>
+<INFO name="QUERY_STATUS" value="OK"/>
+<PARAM name="INPUT:POS" datatype="char" arraysize="*"
+value="10.68">
+<DESCRIPTION>
+Specify the right ascension and declination coordinate.
+To be specified in Equatorial Coordinates J2000.
+</DESCRIPTION>
+</PARAM>
+<PARAM name="INPUT:T_MIN" ucd="time.start"
+utype="Char.TimeAxis.Coverage.Bounds.Limits.StartTime"
+datatype="double"
+unit="d" value="58171.45833">
+<DESCRIPTION>
+Specify the Start Time to check for visibility.
+To be specified in MJD.
+</DESCRIPTION>
+</PARAM>
+<PARAM name="INPUT:T_MAX" ucd="time.end"
+utype="Char.TimeAxis.Coverage.Bounds.Limits.StopTime" unit="d"
+datatype="double" value="58321.958333">
+<DESCRIPTION>
+Specify the Stop Time to check for visibility.
+To be specified in MJD.
+</DESCRIPTION>
+</PARAM>
+<PARAM name="INPUT:VIS_MIN" ucd="time.duration"
+utype="Char.TimeAxis.Coverage.Duration" unit="s"
+datatype="double">
+<DESCRIPTION> Minimum visibility interval interval
+</DESCRIPTION>
+</PARAM>
+... ... ... ...
+\end{lstlisting}
+%%%%%%%%%%%%%%%%%%%% ends here %%%%%%%%%%%%%%%%%%%%
+
+}
+\end{itemize}
+
+\subsection{Availability: VOSI-availability}
+A web service with ObjVisSAP capabilities  \citep{std:VOSI} must have a
+VOSI-availability resource as described in DALI \citep{std:DALI}.
+
+\subsection{Capabilities: VOSI-capabilities}
+A web service with ObjVisSAP capabilities must have a VOSI-capabilities
+resource as described in DALI. The standardID for the \{query\}
+capability is:
+
+%%%%%%%%%%%%%%%%%%%% starts here %%%%%%%%%%%%%%%%%%%%
+\begin{lstlisting}[language=SQL]
+ivo://ivoa.net/std/ObjVisSAP#query-0.3
+\end{lstlisting}
+%%%%%%%%%%%%%%%%%%%% ends here %%%%%%%%%%%%%%%%%%%%
+All DAL services must implement the /\textit{capabilities} resource.
+The following capabilities document shows the minimal metadata and does
+not require a registry extension schema:
+
+%%%%%%%%%%%%%%%%%%%% starts here %%%%%%%%%%%%%%%%%%%%
+\begin{lstlisting}[language=XML]
+<?xml	version="1.0"	encoding="UTF-8"?>
+<vosi:capabilities
+ xmlns:vosi="http://www.ivoa.net/xml/VOSICapabilities/v1.0"
+ xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+ xmlns:vs="http://www.ivoa.net/xml/VODataService/v1.1">
+ <capability standardID="ivo://ivoa.net/std/VOSI#capabilities">
+  <interface xsi:type="vs:ParamHTTP" version="1.0">
+   <accessURL use="base">
+     http://example.com/ObjVisSAP/capabilities
+   </accessURL>
+  </interface>
+ </capability>
+ <capability standardID="ivo://ivoa.net/std/VOSI#availability">
+  <interface xsi:type="vs:ParamHTTP" version="1.0">
+   <accessURL	use="full">
+    http://example.com/ObjVisSAP/availability
+   </accessURL>
+  </interface>
+ </capability>
+ <capability standardID="ivo://ivoa.net/std/ObjVisSAP#query-0.3">
+  <interface xsi:type="vs:ParamHTTP" role="std"	version="0.3">
+   <accessURL>
+    http://example.com/ObjVisSAP/query
+   </accessURL>
+  </interface>
+<!-- service details from extension schema could go here -->
+ </capability>
+</vosi:capabilities>
+
+\end{lstlisting}
+%%%%%%%%%%%%%%%%%%%% ends here %%%%%%%%%%%%%%%%%%%%
+
+Note that the \{query\} resource does not have to be named as shown in
+the access URL(s) above.
+
+\section{\{query\} response}
+
+\subsection{Successful Query}
+The response from a successful call to the \{query\} resource is a
+VOTable, or a different format following the RESPONSEFORMAT definition.
+The ObsCore data model specifies all the VOTable \citep{std:VOTABLE}
+field names, utypes, UCDs, and units to use in the response, as well
+as which fields must have values and which are allowed to be empty.\\
+The \{query\} response must contain the required ObsCore \citep{std:OBSCORE}
+fields and may contain additional fields or custom fields from the service
+provider. Examples are provided in Section 5.\par
+
+Successfully executed requests should result in a response with HTTP
+status code 200 (OK) and a response in the format requested by the
+client or in the default format for the service. The default output
+format is VOTable. Other output formats can be specified by the
+RESPONSEFORMAT parameter \citep{std:DALI11}.\par
+
+The service should set the following HTTP headers to the correct values
+where possible.
+
+\begin{table}[h]
+\centering
+\begin{tabular}{|l|l|}
+\hline
+Content-Type & mime-type of the response \\
+\hline
+Content-Encoding & encoding/compression of the response (if applicable)
+\\
+\hline
+\end{tabular}
+\caption{Recommended HTTP Response Headers}
+\end{table}
+\par
+Since the \{query\} response is usually dynamically generated, the
+Content-Length and Last-Modified headers cannot usually be set.\\
+
+The output returned by a ObjVisSAP service is a VOTable , an XML table
+format, returned with a MIME-type of "application/x-votable+xml". The
+table lists all the visibility periods computed for the given
+coordinates and time period in the server. The following requirements
+are placed on the contents of the table when the query successfully
+returns a list of visibility periods:
+
+\newcounter{numberedCntBI}
+\begin{enumerate}
+\item The VOTable \textbf{MUST} contain a RESOURCE element identified
+with the tag type="results" should contain TABLE element which contains
+the results of the query. The VOTable is permitted to contain additional
+RESOURCE elements, but the usage of any such elements is not defined
+here. If multiple resources are present it is recommended that the query
+results be returned in the first resource element.
+\item The RESOURCE element \textbf{MUST} contains an INFO element with
+name="QUERY\_STATUS". Its value attribute should be set to "\,OK" if the
+query executed successfully, regardless of whether any visibility period
+for the given coordinates were found.
+\setcounter{numberedCntBI}{\theenumi}
+\end{enumerate}
+
+\textbf{Examples: }
+%%%%%%%%%%%%%%%%%%%% starts here %%%%%%%%%%%%%%%%%%%%
+\begin{lstlisting}[language=XML]
+
+<INFO name="QUERY_STATUS" value="OK">
+<INFO name="QUERY_STATUS" value="OK">Successful Checks</INFO>
+\end{lstlisting}
+%%%%%%%%%%%%%%%%%%%% ends here %%%%%%%%%%%%%%%%%%%%
+
+\begin{enumerate}
+\setcounter{enumi}{\thenumberedCntBI}
+\item Each table row represents a different visibility period.
+\item Each record of the output VOTable \textbf{MUST} contain value
+for each FIELD.
+\item Every FIELD \textbf{SHOULD} contain a utype reference to the
+object visibility Data Model whenever possible.
+\item A standard column \textbf{MUST} have a defined utype and a
+defined UCD as described in next section
+\item A standard column could appear multiple times with different
+units. The way to uniquely identify one standard column is the
+following:
+\begin{itemize}
+\item When a standard column can appear multiple times with the same
+utype but different units, the column is uniquely identified by its
+utype and unit.
+\item Otherwise, a standard column is uniquely defined by its utype.
+\end{itemize}
+\item The VOTable \textbf{MUST} contain a reference to the OVDM
+namespace
+\setcounter{numberedCntBI}{\theenumi}
+\end{enumerate}
+
+%%%%%%%%%%%%%%%%%%%% starts here %%%%%%%%%%%%%%%%%%%%
+\begin{lstlisting}[language=XML]
+xmlns:ovdm="http://www.ivoa.net/xml/ObjectVisibilityDM/
+ObjectVisibilityDM-v1.0.xsd"
+\end{lstlisting}
+%%%%%%%%%%%%%%%%%%%% ends here %%%%%%%%%%%%%%%%%%%%
+
+\subsubsection{Standard output fields}
+A detailed reference of the data model can be found in Appendix A
+
+\begin{itemize}
+\item One field \textbf{MUST} have a name="\textbf{t\_validity}"
+with\\ utype=" \textbf{Char.TimeAxis.Coverage.Time}" with
+datatype="double" ucd="time.validity", unit="d" containing the date when
+the visibility calculations will change.
+\end{itemize}
+
+
+\begin{itemize}
+\item One field \textbf{MAY} have a name="\textbf{validity\_accuracy
+}" with datatype="char" and arraysize="*" containing the level of
+confidence of the validity range, with one of the following allowed
+values: HIGH, MEDIUM, LOW.
+\end{itemize}
+
+
+\begin{itemize}
+\item One field \textbf{MAY} have a name="\textbf{
+validity\_predictor}" with datatype="char" and arraysize="*" with an
+identifier of the software used to calculate the visibility.
+\end{itemize}
+
+
+\begin{itemize}
+\item One field \textbf{MUST} have a name="\textbf{t\_start}" with\\
+utype="\textbf{Char.TimeAxis.Coverage.Bounds.Limits.StartTime}"\\ with
+datatype="double" ucd="time.start", unit="d" containing the start
+visibility period.
+\end{itemize}
+
+
+\begin{itemize}
+\item One field \textbf{MUST} have a name="\textbf{t\_stop}" with\\
+utype="\textbf{Char.TimeAxis.Coverage.Bounds.Limits.StopTime}"\\, with
+datatype="double", ucd="time.end" and unit="d" containing the end
+visibility period.
+\end{itemize}
+
+
+\begin{itemize}
+\item One field \textbf{MUST} have a name="\textbf{t\_visibility}"
+with\\ utype="\textbf{Char.TimeAxis.Coverage.Support.Extent}"\\, with
+datatype="double", ucd="time.duration" and unit="s", containing the
+visibility window duration in seconds.
+\end{itemize}
+
+
+\begin{itemize}
+\item Exactly one field \textbf{MAY }have a name="\textbf{pos\_angle
+}" with\\
+utype="\textbf{Char.SpatialAxis.Coverage.Location.Coord.Position2D.Value2.C3}"\\
+with datatype="double", ucd="pos.eq.pos\_angle" and unit="deg" , containing
+the spacecraft position angle.
+\end{itemize}
+
+
+\begin{itemize}
+\item Exactly one field \textbf{MAY }have a name="\textbf{em\_min}" with\\
+utype="\textbf{Char.Spectral.Axis.Energy.Min}"\\
+with datatype="double", ucd="em.energy" and unit="keV" , containing the
+low energy bound for this particular sky position and visibility time interval.
+
+\item Exactly one field \textbf{MAY }have a name="\textbf{em\_max}" with\\
+utype="\textbf{Char.Spectral.Axis.Energy.Max}"\\
+with datatype="double", ucd="em.energy" and unit="keV" , containing the
+high energy bound for this particular sky position and visibility time interval.
+\end{itemize}
+
+
+\begin{itemize}
+\item Exactly one field \textbf{MAY }have a name="\textbf{
+elevation\_min}" with\\
+utype="\textbf{Char.Position.Axis.Min}"\\ with
+datatype="double", ucd="angle.validity" and unit="degrees" , containing
+the minimum elevation for this particular sky position and visibility
+time interval.
+\end{itemize}
+
+\begin{itemize}
+\item Exactly one field \textbf{MAY }have a name="\textbf{
+elevation\_max}" with\\
+utype="\textbf{Char.Position.Axis.Max}"\\
+with datatype="double", ucd="angle.validity" and unit="degrees" , containing
+the maximum elevation for this particular sky position and visibility
+time interval.
+\end{itemize}
+
+
+\begin{itemize}
+\item Exactly one field \textbf{MAY }have a name="\textbf{
+moon\_sep\_min}" with datatype="double", ucd="angle.validity" and
+unit="deg" , containing the minimum Moon separation for this particular
+sky position and visibility time interval.
+\end{itemize}
+
+
+\begin{itemize}
+\item Exactly one field \textbf{MAY }have a name="\textbf{
+moon\_sep\_max}" with datatype="double", ucd="angle.validity" and
+unit="deg" , containing the maximum Moon separation for this particular
+sky position and visibility time interval.
+\end{itemize}
+
+
+\begin{itemize}
+\item Exactly one field \textbf{MAY }have a name="\textbf{
+sun\_sep\_min}" with datatype="double", ucd="angle.validity" and
+unit="deg" , containing the minimum Sun separation for this particular
+sky position and visibility time interval.
+\end{itemize}
+
+
+\begin{itemize}
+\item Exactly one field \textbf{MAY }have a name="\textbf{
+sun\_sep\_max}" with datatype="double", ucd="angle.validity" and
+unit="deg" , containing the maximum Sun separation for this particular
+sky position and visibility time interval.
+\end{itemize}
+\subsubsection{ObjVisSAP \{query\} Service Descriptor}
+The DataLink specification describes a mechanism for describing a
+service within a VOTable resource and recommends that services can
+describe themselves with a special resource with name="this". ObjVisSAP
+\{query\} responses should include a descriptor describing both standard
+and custom query parameters (if applicable). The descriptor for a
+service with standard parameters (see 3.1) would be:\\
+
+%%%%%%%%%%%%%%%%%%%% starts here %%%%%%%%%%%%%%%%%%%%
+\begin{lstlisting}[language=XML]
+<RESOURCE type="meta" utype="adhoc:service" name="this">
+<PARAM name="standardID" datatype="char" arraysize="*"
+    value="ivo://ivoa.net/std/ObjVisSAP#query-0.3"/>
+<PARAM name="accessURL" datatype="char" arraysize="*"
+    value="http://example.com/ObjVisSAP/query"/>
+ <GROUP name="inputParams">
+  <PARAM name="s_ra" datatype="double" arraysize="*" unit="deg"/>
+  <PARAM name="s_dec" datatype="double" arraysize="*" unit="deg"/>
+  <PARAM name="t_min" datatype="char" arraysize="*"	unit="d"/>
+  <PARAM name="t_max" datatype="double" arraysize="*" unit="d"/>
+  <PARAM name="min_vis" datatype="double" arraysize="*"	unit="s"/>
+  <PARAM name="max_vis"	datatype="double" arraysize="*"	unit="s"/>
+ </GROUP>
+</RESOURCE>
+\end{lstlisting}
+%%%%%%%%%%%%%%%%%%%% ends here %%%%%%%%%%%%%%%%%%%%
+
+This VOTable resource should be included in the output from all queries;
+it is especially useful for MAXREC=0 queries since inclusion of the
+self-descriptor would mean that all inputs and outputs would be fully
+described
+
+\section{Output Example}
+%%%%%%%%%%%%%%%%%%%% starts here %%%%%%%%%%%%%%%%%%%%
+\begin{lstlisting}[language=SQL]
+<?xml version="1.0" encoding="UTF-8"?>
+<VOTABLE xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+xsi:noNamespaceSchemaLocation="
+xmlns:http://www.ivoa.net/xml/VOTable/VOTable-1.1.xsd"
+xmlns:ssldm="http://www.ivoa.net/xml/
+ObjectVisibilityDM/ObjectVisibilityDM-v1.0.xsd"
+version="1.0">
+<RESOURCE type="results">
+<DESCRIPTION>
+European Space Astronomy Centre. XMM-Newton SOC -
+Object Visibility Simple Access Protocol (ObjVisSAP)
+</DESCRIPTION>
+<INFO name="QUERY_STATUS" value="OK"/>
+<INFO name="SERVICE PROTOCOL" value="1.0">
+ObjVisSAP
+</INFO>
+<INFO name="REQUEST" value="queryData"/>
+<INFO name="POS" value="10.68, 41.27"/>
+<INFO name="T_MIN" value="58171.45833"/>
+<INFO name="T_MAX" value="58321.958333"/>
+<TABLE>
+<FIELD name="t_start" ucd="time.start"
+utype="Char.TimeAxis.Coverage.Bounds.Limits.StartTime"
+datatype="double" unit="s"/>
+<FIELD name="t_stop" ucd="time.end"
+utype="Char.TimeAxis.Coverage.Bounds.Limits.StopTime"
+datatype="double" unit="s"/>
+<FIELD name="t_visibility"
+utype="Char.TimeAxis.Coverage.Support.Extent"
+ucd="time.duration" datatype="double" unit="s"/>
+<DATA>
+<TABLEDATA>
+<TR>
+<TD>58297.123611</TD>
+<TD>58297.436806</TD>
+<TD>27036</TD>
+</TR>
+<TR>
+<TD>58298.534028</TD>
+<TD>58299.438194</TD>
+<TD>78126</TD>
+</TR>
+... more lines data ...
+</TABLEDATA>
+</DATA>
+</TABLE>
+</RESOURCE>
+</VOTABLE>
+\end{lstlisting}
+%%%%%%%%%%%%%%%%%%%% ends here %%%%%%%%%%%%%%%%%%%%
+\bibliography{ivoatex/ivoabib}
+\appendix
+\renewcommand{\thesection}{\Alph{section}.\arabic{section}}
+\setcounter{section}{0}
+\begin{appendices}
+\section{ObjVisSAP data model summary}
+\FloatBarrier
+\begin{table}[h]
+\tiny
+\centering
+\begin{adjustbox}{angle=90}
+\begin{tabular}{|p{25mm}|p{50mm}|p{20mm}|p{40mm}|p{15mm}|p{10mm}|}
+\hline
+Name & UTYPE & UCD & Description & DataType & Unit \\
+\hline
+\textbf{t\_validity} & \textbf{Char.TimeAxis.Coverage.Time  \newline
+(MUST)} &
+time.validity & Date when the \newline
+visibility calculation will change (MJD) &
+Double & d \\
+\hline
+\textbf{validity\_accuracy} & \textbf{(MAY)} & & Level of confidence
+of the validity range \newline
+Accepted values= HIGH, MEDIUM, LOW & char, * & \\
+\hline
+\textbf{validity\_predictor} & \textbf{(MAY)} & & Identifier (string
+free representation) of the software used to calculate the visibility &
+char, * & \\
+\hline
+\textbf{t\_start} & \textbf{
+Char.TimeAxis.Coverage.Bounds. \newline
+Limits.StartTime  \newline
+(MUST)} & time.start &
+Visibility window start time (MJD) & double & d \\
+\hline
+\textbf{t\_stop} & \textbf{
+Char.TimeAxis.Coverage.Bounds. \newline
+Limits.StopTime \newline
+(MUST)} & time.end &
+Visibility widow end time (MJD) & double & d \\
+\hline
+\textbf{t\_visibility} & \textbf{
+Char.TimeAxis.Coverage. \newline
+Support.Extent  \newline
+(MUST)} & time.duration &
+Visibility duration window & double & s \\
+\hline
+\textbf{pos\_angle} & \textbf{
+Char.SpatialAxis.Coverage.Location. \newline
+Coord.Position2D.Value2.C3  \newline
+(MAY)} &
+pos.eq.pos\_angle & Satellite position angle & double & deg \\
+\hline
+\textbf{em\_threshold} & \textbf{
+Char.Spectral.Axis.Energy.Threshold \newline
+(MAY)} & em.energy & Energy
+threshold for this particular sky position and visibility time interval
+& double & keV \\
+\hline
+\pagebreak
+\textbf{target\_name} & \textbf{Target.Name  \newline
+(MAY)} & meta.id;src &
+Target Name & string & unitless \\
+\hline
+\textbf{em\_min} & \textbf{Char.Spectral.Axis.Energy.Min \newline
+(MAY)} &
+em.energy & Energy minimum for this particular sky position and
+visibility time interval & double & keV \\
+\hline
+\textbf{em\_max} & \textbf{Char.Spectral.Axis.Energy.Max \newline
+(MAY)} &
+em.energy & Energy maximum for this particular sky position and
+visibility time interval & double & keV \\
+\hline
+\textbf{elevation\_min} & \textbf{
+Char.SpatialAxis.Coverage. \newline
+Extent.angular\_distance \newline
+(MAY)} & phys.angDist
+& Minimum elevation for this sky position and visibility time interval &
+double & deg \\
+\hline
+\textbf{elevation\_max} & \textbf{
+Char.SpatialAxis.Coverage. \newline
+Extent.angular\_distance \newline
+(MAY)} & phys.angDist
+& Maximum elevation for this sky position and visibility time interval &
+double & deg \\
+\hline
+\textbf{moon\_sep\_min} & \textbf{(MAY)} & phys.angDist & Minimum
+Moon separation for this sky position and visibility time interval &
+double & deg \\
+\hline
+\textbf{moon\_sep\_max} & \textbf{(MAY)} & phys.angDist & Maximum
+Moon separation for this sky position and visibility time interval &
+double & deg \\
+\hline
+\textbf{sun\_sep\_min} & \textbf{(MAY)} & phys.angDist & Minimum Sun
+separation for this sky position and visibility time interval & double &
+deg \\
+\hline
+\textbf{sun\_sep\_max} & \textbf{(MAY)} & phys.angDist & Maximum Sun
+separation for this sky position and visibility time interval & double &
+deg \\
+\hline
+\end{tabular}
+\end{adjustbox}
+\end{table}
+\FloatBarrier
+\end{appendices}
+\end{document}
