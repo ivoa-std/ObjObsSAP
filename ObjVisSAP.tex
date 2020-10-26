@@ -140,11 +140,11 @@ visibility from astronomical observatories.
 
 
 The ObjVisSAP interface has intentionally been made similar to the SSAP
-(\cite{std:SSAP}) and SIAP v2.0 (\cite{std:SIAP}) through the adoption
+\citep{2012ivoa.spec.0210T} and SIAP v2.0 \citep{2015ivoa.spec.0617D} through the adoption
 of current IVOA Data Access Layer Interface (DALI) and Observation Data
-Model Core Components (\cite{std:OBSCORE}) and its implementation in
+Model Core Components \citep{2017ivoa.spec.0509L} and its implementation in
 the Table Access Protocol. ObjVisSAP services also support
-VOSI-availability and VOSI-capabilities resources.
+VOSI-availability and VOSI-capabilities resources:
 
 
 
@@ -157,10 +157,10 @@ VOSI-availability and VOSI-capabilities resources.
 
 
 \subsection{The Role in the IVOA Architecture}
-ObjVisSAP specifies standardID values \citep{std:VOID2} for each
-capability, as defined by VODataService \citep{std:VOR}. ObjVisSAP
+ObjVisSAP specifies standardID values \citep{2016ivoa.spec.0523D} for each
+capability, as defined by VODataService \citep{2010ivoa.spec.1202P}. ObjVisSAP
 services may be registered in an IVOA Registry using the SimpleDALRegExt
-\citep{DALREGEXT} extension schema.
+\citep{2017ivoa.spec.0530P} extension schema.
 
 
 \section{Requirements for Compliance}
@@ -169,7 +169,7 @@ in this section. Through this web method, clients search for visibility
 periods based on given sky coordinates and a time period (optional). The
 response is a VOTable that describes the constraint-free visibility time
 windows. Other output formats can be specified by the RESPONSEFORMAT
-parameter (see ).
+parameter (see \citet{2017ivoa.spec.0517D}).
 
 \subsection{Compliance}
 The keywords \textbf{MUST}, \textbf{REQUIRED}, \textbf{SHOULD},
@@ -188,7 +188,7 @@ its protocols is said to be "conditionally compliant".
 \section{Resources}
 The purpose of the object visibility query is to allow users/clients to
 check if a given set of sky coordinates are visible for a given time
-period. We define "\,visible" as the time interval suitable to perform
+period. We define "visible" as the time interval suitable to perform
 scientific observations. We therefore, leave to the observatories to
 define when exactly an object is visible for scientific observations.
 
@@ -414,8 +414,8 @@ datatype="double">
 \end{itemize}
 
 \subsection{Availability: VOSI-availability}
-A web service with ObjVisSAP capabilities  \citep{std:VOSI} must have a
-VOSI-availability resource as described in DALI \citep{std:DALI}.
+A web service with ObjVisSAP capabilities  \citep{2017ivoa.spec.0524G} must have a
+VOSI-availability resource as described in DALI \citep{2017ivoa.spec.0517D}.
 
 \subsection{Capabilities: VOSI-capabilities}
 A web service with ObjVisSAP capabilities must have a VOSI-capabilities
@@ -473,10 +473,10 @@ the access URL(s) above.
 \subsection{Successful Query}
 The response from a successful call to the \{query\} resource is a
 VOTable, or a different format following the RESPONSEFORMAT definition.
-The ObsCore data model specifies all the VOTable \citep{std:VOTABLE}
+The ObsCore data model specifies all the VOTable \citep{2019ivoa.spec.1021O}
 field names, utypes, UCDs, and units to use in the response, as well
 as which fields must have values and which are allowed to be empty.\\
-The \{query\} response must contain the required ObsCore \citep{std:OBSCORE}
+The \{query\} response must contain the required ObsCore \citep{2017ivoa.spec.0509L}
 fields and may contain additional fields or custom fields from the service
 provider. Examples are provided in Section 5.\par
 
@@ -484,7 +484,7 @@ Successfully executed requests should result in a response with HTTP
 status code 200 (OK) and a response in the format requested by the
 client or in the default format for the service. The default output
 format is VOTable. Other output formats can be specified by the
-RESPONSEFORMAT parameter \citep{std:DALI11}.\par
+RESPONSEFORMAT parameter \citep{2017ivoa.spec.0517D}.\par
 
 The service should set the following HTTP headers to the correct values
 where possible.
@@ -772,7 +772,7 @@ ucd="time.duration" datatype="double" unit="s"/>
 </VOTABLE>
 \end{lstlisting}
 %%%%%%%%%%%%%%%%%%%% ends here %%%%%%%%%%%%%%%%%%%%
-\bibliography{ivoatex/ivoabib}
+\bibliography{ivoatex/ivoabib,ivoatex/docrepo.bib}
 \appendix
 \renewcommand{\thesection}{\Alph{section}.\arabic{section}}
 \setcounter{section}{0}
