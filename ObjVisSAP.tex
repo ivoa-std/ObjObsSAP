@@ -141,10 +141,10 @@ visibility from astronomical observatories.
 
 The ObjVisSAP interface has intentionally been made similar to the SSAP
 \citep{2012ivoa.spec.0210T} and SIAP v2.0 \citep{2015ivoa.spec.0617D} through the adoption
-of current IVOA Data Access Layer Interface (DALI; \cite{2017ivoa.spec.0517D}) and Observation Data
-Model Core Components (ObsCore;\cite{2017ivoa.spec.0509L}) and its implementation in
-the Table Access Protocol (TAP;\cite{2019ivoa.spec.0927D}). ObjVisSAP services also support
-VOSI-availability and VOSI-capabilities resources (VOSI;\cite{2017ivoa.spec.0524G}):
+of current IVOA Data Access Layer Interface (DALI; \citealt{2017ivoa.spec.0517D}) and Observation Data
+Model Core Components (ObsCore;\citealt{2017ivoa.spec.0509L}) and its implementation in
+the Table Access Protocol (TAP;\citealt{2019ivoa.spec.0927D}). ObjVisSAP services also support
+VOSI-availability and VOSI-capabilities resources (VOSI;\citealt{2017ivoa.spec.0524G}):
 
 
 
@@ -290,7 +290,7 @@ of ObjVisSAP. The use case of uploading lists of coordinates is covered
 by the multiple-valued parameters values.}
 
 \item{\textbf{POS}\\The service \textbf{MUST }support the
-\textbf{T\_MIN }parameter, to specify the position in the sky to check the visibility. 
+\textbf{POS} parameter, to specify the position in the sky to check the visibility. 
 The coordinate values are specified in list format (comma separated) with no embedded white
 space.\\
 Example:\\
@@ -580,8 +580,8 @@ the visibility calculations will change.
 
 
 \begin{itemize}
-\item Exactly one field \textbf{MAY} have a name="\textbf{validity\_accuracy
-}" with datatype="char" and arraysize="*" containing the level of
+\item Exactly one field \textbf{MAY} have a name="\textbf{validity\_accuracy}" 
+with datatype="char" and arraysize="*" containing the level of
 confidence of the validity range, with one of the following allowed
 values: HIGH, MEDIUM, LOW.
 \end{itemize}
@@ -674,16 +674,16 @@ sky position and visibility time interval.
 
 
 \begin{itemize}
-\item Exactly one field \textbf{MAY }have a name="\textbf{sun\_sep\_min}" 
-with datatype="double", ucd="angle.validity" and
+\item Exactly one field \textbf{MAY }have a name="\textbf{sun\_sep\_min}" with\\
+datatype="double", ucd="angle.validity" and
 unit="deg" , containing the minimum Sun separation for this particular
 sky position and visibility time interval.
 \end{itemize}
 
 
 \begin{itemize}
-\item Exactly one field \textbf{MAY }have a name="\textbf{sun\_sep\_max}" 
-with datatype="double", ucd="angle.validity" and
+\item Exactly one field \textbf{MAY }have a name="\textbf{sun\_sep\_max}" with\\
+datatype="double", ucd="angle.validity" and
 unit="deg" , containing the maximum Sun separation for this particular
 sky position and visibility time interval.
 \end{itemize}
@@ -737,8 +737,7 @@ Object Visibility Simple Access Protocol (ObjVisSAP)
 <INFO name="SERVICE PROTOCOL" value="1.0">
 ObjVisSAP
 </INFO>
-<INFO name="REQUEST" value="queryData"/>
-<INFO name="POS" value="10.68, 41.27"/>
+<INFO name="POS" value="10.68,41.27"/>
 <INFO name="T_MIN" value="58171.45833"/>
 <INFO name="T_MAX" value="58321.958333"/>
 <TABLE>
