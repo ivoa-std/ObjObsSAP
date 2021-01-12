@@ -141,10 +141,10 @@ visibility from astronomical observatories.
 
 The ObjVisSAP interface has intentionally been made similar to the SSAP
 \citep{2012ivoa.spec.0210T} and SIAP v2.0 \citep{2015ivoa.spec.0617D} through the adoption
-of current IVOA Data Access Layer Interface (DALI) and Observation Data
-Model Core Components \citep{2017ivoa.spec.0509L} and its implementation in
-the Table Access Protocol. ObjVisSAP services also support
-VOSI-availability and VOSI-capabilities resources:
+of current IVOA Data Access Layer Interface (DALI; \citealt{2017ivoa.spec.0517D}) and Observation Data
+Model Core Components (ObsCore;\citealt{2017ivoa.spec.0509L}) and its implementation in
+the Table Access Protocol (TAP;\citealt{2019ivoa.spec.0927D}). ObjVisSAP services also support
+VOSI-availability and VOSI-capabilities resources (VOSI;\citealt{2017ivoa.spec.0524G}):
 
 
 
@@ -164,8 +164,8 @@ services may be registered in an IVOA Registry using the SimpleDALRegExt
 
 
 \section{Requirements for Compliance}
-The object visibility query web method \textbf{MUST} be supported as
-in this section. Through this web method, clients search for visibility
+The object visibility query web method \textbf{MUST} be supported as described
+in section \ref{sec:query}. Through this web method, clients search for visibility
 periods based on given sky coordinates and a time period (optional). The
 response is a VOTable that describes the constraint-free visibility time
 windows. Other output formats can be specified by the RESPONSEFORMAT
@@ -221,7 +221,7 @@ VOSI-capabilities & /capabilities & yes \\
 \end{table}
 The ObjVisSAP service must have at least one \{query\} resource.
 
-\subsection{\{query\} resource}
+\subsection{\{query\} resource} \label{sec:query}
 The \{query\} resource is a synchronous web service resource that
 follows the DALI-sync description . The name and the path of the
 resource is up to the implementer. The functionality to find the
@@ -289,8 +289,9 @@ respond with metadata-only (normal output document with no records).}
 of ObjVisSAP. The use case of uploading lists of coordinates is covered
 by the multiple-valued parameters values.}
 
-\item{\textbf{POS}\\Position in the sky to check the visibility. The coordinate
-values are specified in list format (comma separated) with no embedded white
+\item{\textbf{POS}\\The service \textbf{MUST }support the
+\textbf{POS} parameter, to specify the position in the sky to check the visibility. 
+The coordinate values are specified in list format (comma separated) with no embedded white
 space.\\
 Example:\\
 %%%%%%%%%%%%%%%%%%%% starts here %%%%%%%%%%%%%%%%%%%%
@@ -314,7 +315,9 @@ should default to NOW.}
 \item{\textbf{T\_MAX}\\The service \textbf{MUST }support the \textbf{T\_MAX }
 parameter, to specify the end time to check for object visibility. The
 \textbf{T\_MAX} parameter has to be specified following ObsCore data model.
-The unit of \textbf{T\_MAX} parameter must be expressed in MJD.\\
+The unit of \textbf{T\_MAX} parameter must be expressed in MJD.\par
+\textbf{Example:} to query for object visibility of the coordinate (10.68,41,27) and end
+time for the periods earlier than 11-April-2021:
 %%%%%%%%%%%%%%%%%%%% starts here %%%%%%%%%%%%%%%%%%%%
 \begin{table}[h]
 \centering
@@ -329,8 +332,7 @@ POS=10.68,41.27&T_MAX=59522
 \end{tabular}
 \end{table}
 %%%%%%%%%%%%%%%%%%%% ends here %%%%%%%%%%%%%%%%%%%%
-to query for object visibility of the coordinate (10.68,41,27) and end
-time for the periods minor than 11-April-2021.\par
+
 Calculation of the visibility by different observatories is only defined
 for a certain future time range. That implies that there could be
 \textbf{a T\_MAX hard limit} defined by the service that could be
@@ -570,7 +572,7 @@ ObjectVisibilityDM-v1.0.xsd"
 A detailed reference of the data model can be found in Appendix A
 
 \begin{itemize}
-\item One field \textbf{MUST} have a name="\textbf{t\_validity}"
+\item Exactly one field \textbf{MUST} have a name="\textbf{t\_validity}"
 with\\ utype=" \textbf{Char.TimeAxis.Coverage.Time}" with
 datatype="double" ucd="time.validity", unit="d" containing the date when
 the visibility calculations will change.
@@ -578,38 +580,38 @@ the visibility calculations will change.
 
 
 \begin{itemize}
-\item One field \textbf{MAY} have a name="\textbf{validity\_accuracy
-}" with datatype="char" and arraysize="*" containing the level of
+\item Exactly one field \textbf{MAY} have a name="\textbf{validity\_accuracy}" 
+with datatype="char" and arraysize="*" containing the level of
 confidence of the validity range, with one of the following allowed
 values: HIGH, MEDIUM, LOW.
 \end{itemize}
 
 
 \begin{itemize}
-\item One field \textbf{MAY} have a name="\textbf{
+\item Exactly one field \textbf{MAY} have a name="\textbf{
 validity\_predictor}" with datatype="char" and arraysize="*" with an
 identifier of the software used to calculate the visibility.
 \end{itemize}
 
 
 \begin{itemize}
-\item One field \textbf{MUST} have a name="\textbf{t\_start}" with\\
+\item Exactly one field \textbf{MUST} have a name="\textbf{t\_start}" with\\
 utype="\textbf{Char.TimeAxis.Coverage.Bounds.Limits.StartTime}"\\ with
-datatype="double" ucd="time.start", unit="d" containing the start
+datatype="double" ucd="time.start", unit="d" containing the start of the
 visibility period.
 \end{itemize}
 
 
 \begin{itemize}
-\item One field \textbf{MUST} have a name="\textbf{t\_stop}" with\\
+\item Exactly one field \textbf{MUST} have a name="\textbf{t\_stop}" with\\
 utype="\textbf{Char.TimeAxis.Coverage.Bounds.Limits.StopTime}"\\, with
-datatype="double", ucd="time.end" and unit="d" containing the end
+datatype="double", ucd="time.end" and unit="d" containing the end of the
 visibility period.
 \end{itemize}
 
 
 \begin{itemize}
-\item One field \textbf{MUST} have a name="\textbf{t\_visibility}"
+\item Exactly one field \textbf{MUST} have a name="\textbf{t\_visibility}"
 with\\ utype="\textbf{Char.TimeAxis.Coverage.Support.Extent}"\\, with
 datatype="double", ucd="time.duration" and unit="s", containing the
 visibility window duration in seconds.
@@ -639,8 +641,7 @@ high energy bound for this particular sky position and visibility time interval.
 
 
 \begin{itemize}
-\item Exactly one field \textbf{MAY }have a name="\textbf{
-elevation\_min}" with\\
+\item Exactly one field \textbf{MAY }have a name="\textbf{elevation\_min}" with\\
 utype="\textbf{Char.Position.Axis.Min}"\\ with
 datatype="double", ucd="angle.validity" and unit="degrees" , containing
 the minimum elevation for this particular sky position and visibility
@@ -648,8 +649,7 @@ time interval.
 \end{itemize}
 
 \begin{itemize}
-\item Exactly one field \textbf{MAY }have a name="\textbf{
-elevation\_max}" with\\
+\item Exactly one field \textbf{MAY }have a name="\textbf{elevation\_max}" with\\
 utype="\textbf{Char.Position.Axis.Max}"\\
 with datatype="double", ucd="angle.validity" and unit="degrees" , containing
 the maximum elevation for this particular sky position and visibility
@@ -658,35 +658,36 @@ time interval.
 
 
 \begin{itemize}
-\item Exactly one field \textbf{MAY }have a name="\textbf{
-moon\_sep\_min}" with datatype="double", ucd="angle.validity" and
+\item Exactly one field \textbf{MAY }have a name="\textbf{moon\_sep\_min}" 
+with datatype="double", ucd="angle.validity" and
 unit="deg" , containing the minimum Moon separation for this particular
 sky position and visibility time interval.
 \end{itemize}
 
 
 \begin{itemize}
-\item Exactly one field \textbf{MAY }have a name="\textbf{
-moon\_sep\_max}" with datatype="double", ucd="angle.validity" and
+\item Exactly one field \textbf{MAY }have a name="\textbf{moon\_sep\_max}" 
+with datatype="double", ucd="angle.validity" and
 unit="deg" , containing the maximum Moon separation for this particular
 sky position and visibility time interval.
 \end{itemize}
 
 
 \begin{itemize}
-\item Exactly one field \textbf{MAY }have a name="\textbf{
-sun\_sep\_min}" with datatype="double", ucd="angle.validity" and
+\item Exactly one field \textbf{MAY }have a name="\textbf{sun\_sep\_min}" with\\
+datatype="double", ucd="angle.validity" and
 unit="deg" , containing the minimum Sun separation for this particular
 sky position and visibility time interval.
 \end{itemize}
 
 
 \begin{itemize}
-\item Exactly one field \textbf{MAY }have a name="\textbf{
-sun\_sep\_max}" with datatype="double", ucd="angle.validity" and
+\item Exactly one field \textbf{MAY }have a name="\textbf{sun\_sep\_max}" with\\
+datatype="double", ucd="angle.validity" and
 unit="deg" , containing the maximum Sun separation for this particular
 sky position and visibility time interval.
 \end{itemize}
+
 \subsubsection{ObjVisSAP \{query\} Service Descriptor}
 The DataLink specification describes a mechanism for describing a
 service within a VOTable resource and recommends that services can
@@ -703,12 +704,10 @@ service with standard parameters (see 3.1) would be:\\
 <PARAM name="accessURL" datatype="char" arraysize="*"
     value="http://example.com/ObjVisSAP/query"/>
  <GROUP name="inputParams">
-  <PARAM name="s_ra" datatype="double" arraysize="*" unit="deg"/>
-  <PARAM name="s_dec" datatype="double" arraysize="*" unit="deg"/>
-  <PARAM name="t_min" datatype="char" arraysize="*"	unit="d"/>
+  <PARAM name="pos" datatype="char" arraysize="*"/>
+  <PARAM name="t_min" datatype="double" arraysize="*"	unit="d"/>
   <PARAM name="t_max" datatype="double" arraysize="*" unit="d"/>
-  <PARAM name="min_vis" datatype="double" arraysize="*"	unit="s"/>
-  <PARAM name="max_vis"	datatype="double" arraysize="*"	unit="s"/>
+  <PARAM name="vis_min" datatype="double" arraysize="*"	unit="s"/>
  </GROUP>
 </RESOURCE>
 \end{lstlisting}
@@ -738,8 +737,7 @@ Object Visibility Simple Access Protocol (ObjVisSAP)
 <INFO name="SERVICE PROTOCOL" value="1.0">
 ObjVisSAP
 </INFO>
-<INFO name="REQUEST" value="queryData"/>
-<INFO name="POS" value="10.68, 41.27"/>
+<INFO name="POS" value="10.68,41.27"/>
 <INFO name="T_MIN" value="58171.45833"/>
 <INFO name="T_MAX" value="58321.958333"/>
 <TABLE>
