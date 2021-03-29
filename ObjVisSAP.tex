@@ -386,7 +386,7 @@ To be specified in Equatorial Coordinates J2000.
 </PARAM>
 <PARAM name="INPUT:TIME"
 utype="Char.TimeAxis.Coverage.Bounds.Limits"
-datatype="double"
+datatype="float"
 unit="d" value="58171.45833/58321.958333">
 <DESCRIPTION>
 Specify the time coverage (epoch), specified in range-list form
@@ -395,7 +395,7 @@ to check for visibility. To be specified in MJD.
 </PARAM>
 <PARAM name="INPUT:VIS_MIN" ucd="time.duration"
 utype="Char.TimeAxis.Coverage.Duration" unit="s"
-datatype="double">
+datatype="float">
 <DESCRIPTION> Minimum visibility interval interval
 </DESCRIPTION>
 </PARAM>
@@ -572,7 +572,7 @@ A detailed reference of the data model can be found in Appendix A
 \begin{itemize}
 \item {Exactly one field \textbf{MUST} have a name="\textbf{t\_validity}"
 with\\ utype=" \textbf{Char.TimeAxis.Coverage.Time}" with
-datatype="double" or datatype="float", ucd="time.validity", unit="d" containing the date when the visibility calculations will change.}
+datatype="float", ucd="time.validity", unit="d" containing the date when the visibility calculations will change.}
 
 \item {Exactly one field \textbf{MAY} have a name="\textbf{validity\_accuracy}" 
 with datatype="char" and arraysize="*" containing the level of
@@ -585,58 +585,58 @@ identifier of the software used to calculate the visibility.}
 
 \item {Exactly one field \textbf{MUST} have a name="\textbf{t\_start}" with\\
 utype="\textbf{Char.TimeAxis.Coverage.Bounds.Limits.StartTime}"\\ with
-datatype="double" or datatype="float",  ucd="time.start", unit="d" containing the start of the visibility period.}
+datatype="float",  ucd="time.start", unit="d" containing the start of the visibility period.}
 
 \item {Exactly one field \textbf{MUST} have a name="\textbf{t\_stop}" with\\
 utype="\textbf{Char.TimeAxis.Coverage.Bounds.Limits.StopTime}"\\, with
-datatype="double" or datatype="float", ucd="time.end" and unit="d" containing the end of the visibility period.}
+datatype="float", ucd="time.end" and unit="d" containing the end of the visibility period.}
 
 \item {Exactly one field \textbf{MUST} have a name="\textbf{t\_visibility}"
 with\\ utype="\textbf{Char.TimeAxis.Coverage.Support.Extent}"\\, with
-datatype="double" or datatype="float", ucd="time.duration" and unit="s", containing the visibility window duration in seconds.}
+datatype="float", ucd="time.duration" and unit="s", containing the visibility window duration in seconds.}
 
 \item {Exactly one field \textbf{MAY }have a name="\textbf{pos\_angle
 }" with\\
 utype="\textbf{Char.SpatialAxis.Coverage.Location.Coord.Position2D.Value2.C3}"\\
-with datatype="double" or datatype="float", ucd="pos.eq.pos\_angle" and
+datatype="float", ucd="pos.eq.pos\_angle" and
 unit="deg", containing the spacecraft position angle.}
 
 \item {Exactly one field \textbf{MAY }have a name="\textbf{em\_min}" with\\
 utype="\textbf{Char.Spectral.Axis.Energy.Min}"\\
-with datatype="double" or datatype="float", ucd="em.energy" and unit="m" , containing the low energy bound for this particular sky position and visibility time interval.}
+datatype="float", ucd="em.energy" and unit="m" , containing the low energy bound for this particular sky position and visibility time interval.}
 
 \item {Exactly one field \textbf{MAY }have a name="\textbf{em\_max}" with\\
 utype="\textbf{Char.Spectral.Axis.Energy.Max}"\\
-with datatype="double" or datatype="float", ucd="em.energy" and unit="m" , containing the high energy bound for this particular sky position and
+datatype="float", ucd="em.energy" and unit="m" , containing the high energy bound for this particular sky position and
 visibility time interval.}
 
 \item {Exactly one field \textbf{MAY }have a name="\textbf{elevation\_min}" with\\
 utype="\textbf{Char.Position.Axis.Min}"\\ with
-datatype="double" or datatype="float", ucd="angle.validity" and unit="deg" , containing the minimum elevation for this particular sky position and visibility
+datatype="float", ucd="angle.validity" and unit="deg" , containing the minimum elevation for this particular sky position and visibility
 time interval.}
 
 \item {Exactly one field \textbf{MAY }have a name="\textbf{elevation\_max}" with\\
 utype="\textbf{Char.Position.Axis.Max}"\\
-with datatype="double" or datatype="float", ucd="angle.validity" and unit="deg", containing the maximum elevation for this particular sky position and 
+datatype="float", ucd="angle.validity" and unit="deg", containing the maximum elevation for this particular sky position and 
 visibility time interval.}
 
 \item {Exactly one field \textbf{MAY }have a name="\textbf{moon\_sep\_min}" 
-with datatype="double" or datatype="float", ucd="angle.validity" and
+datatype="float", ucd="angle.validity" and
 unit="deg" , containing the minimum Moon separation for this particular
 sky position and visibility time interval.}
 
 \item {Exactly one field \textbf{MAY }have a name="\textbf{moon\_sep\_max}" 
-with datatype="double" or datatype="float", ucd="angle.validity" and
+datatype="float", ucd="angle.validity" and
 unit="deg" , containing the maximum Moon separation for this particular
 sky position and visibility time interval.}
 
 \item {Exactly one field \textbf{MAY }have a name="\textbf{sun\_sep\_min}" with\\
-datatype="double" or datatype="float", ucd="angle.validity" and
+datatype="float", ucd="angle.validity" and
 unit="deg" , containing the minimum Sun separation for this particular
 sky position and visibility time interval.}
 
 \item {Exactly one field \textbf{MAY }have a name="\textbf{sun\_sep\_max}" with\\
-datatype="double" or datatype="float", ucd="angle.validity" and
+datatype="float", ucd="angle.validity" and
 unit="deg" , containing the maximum Sun separation for this particular
 sky position and visibility time interval.}
 
@@ -666,8 +666,8 @@ service with standard parameters (see 3.1) would be:\\
     value="http://example.com/ObjVisSAP/query"/>
  <GROUP name="inputParams">
   <PARAM name="pos" datatype="char" arraysize="*"/>
-  <PARAM name="time" datatype="double" arraysize="*"	 unit="d"/>
-  <PARAM name="vis_min" datatype="double" arraysize="*"	unit="s"/>
+  <PARAM name="time" datatype="float" arraysize="*"	 unit="d"/>
+  <PARAM name="vis_min" datatype="float" arraysize="*"	unit="s"/>
  </GROUP>
 </RESOURCE>
 \end{lstlisting}
@@ -702,13 +702,13 @@ ObjVisSAP
 <TABLE>
 <FIELD name="t_start" ucd="time.start"
 utype="Char.TimeAxis.Coverage.Bounds.Limits.StartTime"
-datatype="double" unit="s"/>
+datatype="float" unit="s"/>
 <FIELD name="t_stop" ucd="time.end"
 utype="Char.TimeAxis.Coverage.Bounds.Limits.StopTime"
-datatype="double" unit="s"/>
+datatype="float" unit="s"/>
 <FIELD name="t_visibility"
 utype="Char.TimeAxis.Coverage.Support.Extent"
-ucd="time.duration" datatype="double" unit="s"/>
+ucd="time.duration" datatype="float" unit="s"/>
 <DATA>
 <TABLEDATA>
 <TR>
@@ -748,7 +748,7 @@ Name & UTYPE & UCD & Description & DataType & Unit \\
 (MUST)} &
 time.validity & Date when the \newline
 visibility calculation will change (MJD) &
-double or float & d \\
+float & d \\
 \hline
 \textbf{validity\_accuracy} & \textbf{(MAY)} & & Level of confidence
 of the validity range \newline
@@ -762,31 +762,31 @@ char, * & \\
 Char.TimeAxis.Coverage.Bounds. \newline
 Limits.StartTime  \newline
 (MUST)} & time.start &
-Visibility window start time (MJD) & double or float & d \\
+Visibility window start time (MJD) & float & d \\
 \hline
 \textbf{t\_stop} & \textbf{
 Char.TimeAxis.Coverage.Bounds. \newline
 Limits.StopTime \newline
 (MUST)} & time.end &
-Visibility widow end time (MJD) & double or float & d \\
+Visibility widow end time (MJD) & float & d \\
 \hline
 \textbf{t\_visibility} & \textbf{
 Char.TimeAxis.Coverage. \newline
 Support.Extent  \newline
 (MUST)} & time.duration &
-Visibility duration window & double ot float & s \\
+Visibility duration window & float & s \\
 \hline
 \textbf{pos\_angle} & \textbf{
 Char.SpatialAxis.Coverage.Location. \newline
 Coord.Position2D.Value2.C3  \newline
 (MAY)} &
-pos.eq.pos\_angle & Satellite position angle & double or float & deg \\
+pos.eq.pos\_angle & Satellite position angle & float & deg \\
 \hline
 \textbf{em\_threshold} & \textbf{
 Char.Spectral.Axis.Energy.Threshold \newline
 (MAY)} & em.energy & Energy
 threshold for this particular sky position and visibility time interval
-& double or float & m \\
+& float & m \\
 \hline
 \pagebreak
 \textbf{target\_name} & \textbf{Target.Name  \newline
@@ -796,41 +796,41 @@ Target Name & string & unitless \\
 \textbf{em\_min} & \textbf{Char.Spectral.Axis.Energy.Min \newline
 (MAY)} &
 em.energy & Energy minimum for this particular sky position and
-visibility time interval & double or float & m \\
+visibility time interval & float & m \\
 \hline
 \textbf{em\_max} & \textbf{Char.Spectral.Axis.Energy.Max \newline
 (MAY)} &
 em.energy & Energy maximum for this particular sky position and
-visibility time interval & double or float & m \\
+visibility time interval & float & m \\
 \hline
 \textbf{elevation\_min} & \textbf{
 Char.SpatialAxis.Coverage. \newline
 Extent.angular\_distance \newline
 (MAY)} & phys.angDist
 & Minimum elevation for this sky position and visibility time interval &
-double or float & deg \\
+float & deg \\
 \hline
 \textbf{elevation\_max} & \textbf{
 Char.SpatialAxis.Coverage. \newline
 Extent.angular\_distance \newline
 (MAY)} & phys.angDist
 & Maximum elevation for this sky position and visibility time interval &
-double or float & deg \\
+float & deg \\
 \hline
 \textbf{moon\_sep\_min} & \textbf{(MAY)} & phys.angDist & Minimum
 Moon separation for this sky position and visibility time interval &
-double or float & deg \\
+float & deg \\
 \hline
 \textbf{moon\_sep\_max} & \textbf{(MAY)} & phys.angDist & Maximum
 Moon separation for this sky position and visibility time interval &
-double or float & deg \\
+float & deg \\
 \hline
 \textbf{sun\_sep\_min} & \textbf{(MAY)} & phys.angDist & Minimum Sun
-separation for this sky position and visibility time interval & double or float &
+separation for this sky position and visibility time interval & float &
 deg \\
 \hline
 \textbf{sun\_sep\_max} & \textbf{(MAY)} & phys.angDist & Maximum Sun
-separation for this sky position and visibility time interval & double or float &
+separation for this sky position and visibility time interval & float &
 deg \\
 \hline
 \textbf{facility} & \textbf{Char.SpatialAxis.Coverage.Provenance.\newline ObsConfig.Facility.name} 
