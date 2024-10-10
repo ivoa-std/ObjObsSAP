@@ -38,7 +38,7 @@
     \begin{html}<span class="comic">#1</span>\end{html}}
 \customcss{custom.css}
 
-\title{Object Visibility Simple Access Protocol}
+\title{Object Observability Simple Access Protocol}
 
 \ivoagroup{Data Access Layer Group}
 
@@ -77,13 +77,13 @@
 \begin{document}
 
 \begin{abstract}
-The Object Visibility Simple Access Protocol (ObjVisSAP) is an IVOA Data
+The Object Observability Simple Access Protocol (ObjObsSAP) is an IVOA Data
 Access protocol which defines the standard for retrieving object
 constraint-free visibility time intervals through a uniform interface within
 the VO framework for given object coordinates to be observed by a given
-Astronomical Observatory. The ObjVisSAP services can be registered in an
+Astronomical Observatory. The ObjObsSAP services can be registered in an
 IVOA Registry of Resources using the VOResource, Extension standard, having
-a unique ResourceIdentifier in the registry. The ObjVisSAP interface is
+a unique ResourceIdentifier in the registry. The ObjObsSAP interface is
 meant to be reasonably simple to be implemented by service providers. A
 basic query will be done introducing a set of sky coordinates and a given
 time period (optional). The service returns a list of constraint-free
@@ -114,7 +114,7 @@ collaboration of separately funded projects to develop standards and
 infrastructure that enable VO applications.
 
 \section*{Link to IVOA Architecture}
-The figure below shows where ObjVisSAP protocol fits within the
+The figure below shows where ObjObsSAP protocol fits within the
 IVOA architecture:
 
 %%%%%%%%%%%%%%%%%%%% Figure/Image No: 1 starts here %%%%%%%%%%%%%%%%%%%%
@@ -133,17 +133,17 @@ IVOA architecture:
 \section{Introduction}\label{section:_Toc415497365}
 
 
-The Object Visibility Simple Access Protocol (ObjVisSAP henceforth)
+The Object Observability Simple Access Protocol (ObjObsSAP henceforth)
 specifies in a standard format the services to retrieve object
 visibility from astronomical observatories.
 
 
 
-The ObjVisSAP interface has intentionally been made similar to the SSAP
+The ObjObsSAP interface has intentionally been made similar to the SSAP
 \citep{2012ivoa.spec.0210T} and SIAP v2.0 \citep{2015ivoa.spec.0617D} through the adoption
 of current IVOA Data Access Layer Interface (DALI; \citealt{2017ivoa.spec.0517D}) and Observation Data
 Model Core Components (ObsCore;\citealt{2017ivoa.spec.0509L}) and its implementation in
-the Table Access Protocol (TAP;\citealt{2019ivoa.spec.0927D}). ObjVisSAP services also support
+the Table Access Protocol (TAP;\citealt{2019ivoa.spec.0927D}). ObjObsSAP services also support
 VOSI-availability and VOSI-capabilities resources (VOSI;\citealt{2017ivoa.spec.0524G}):
 
 
@@ -157,14 +157,14 @@ VOSI-availability and VOSI-capabilities resources (VOSI;\citealt{2017ivoa.spec.0
 
 
 \subsection{The Role in the IVOA Architecture}
-ObjVisSAP specifies standardID values \citep{2016ivoa.spec.0523D} for each
-capability, as defined by VODataService \citep{2010ivoa.spec.1202P}. ObjVisSAP
+ObjObsSAP specifies standardID values \citep{2016ivoa.spec.0523D} for each
+capability, as defined by VODataService \citep{2010ivoa.spec.1202P}. ObjObsSAP
 services may be registered in an IVOA Registry using the SimpleDALRegExt
 \citep{2017ivoa.spec.0530P} extension schema.
 
 
 \section{Requirements for Compliance}
-The object visibility query web method \textbf{MUST} be supported as described
+The object observability query web method \textbf{MUST} be supported as described
 in section \ref{sec:query}. Through this web method, clients search for visibility
 periods based on given sky coordinates and a time period (optional). The
 response is a VOTable that describes the constraint-free visibility time
@@ -186,7 +186,7 @@ requirements but not all the \textbf{SHOULD} level requirements for
 its protocols is said to be "conditionally compliant".
 
 \section{Resources}
-The purpose of the object visibility query is to allow users/clients to
+The purpose of the object observability query is to allow users/clients to
 check if a given set of sky coordinates are visible for a given time
 period. We define "visible" as the time interval suitable to perform
 scientific observations. We therefore, leave to the observatories to
@@ -198,7 +198,7 @@ the ICRS coordinate system and the start time and stop time for the
 visibility checks (optional). Any additional parameters may be used to
 customize the visibility checks.
 
-The ObjVisSAP service have been designed to follow the DALI-sync
+The ObjObsSAP service have been designed to follow the DALI-sync
 specification.
 
 \begin{table}[h]
@@ -217,9 +217,9 @@ VOSI-availability & /availability & yes \\
 VOSI-capabilities & /capabilities & yes \\
 \hline
 \end{tabular}
-\caption{ObjVisSAP service resources}
+\caption{ObjObsSAP service resources}
 \end{table}
-The ObjVisSAP service must have at least one \{query\} resource.
+The ObjObsSAP service must have at least one \{query\} resource.
 
 \subsection{\{query\} resource} \label{sec:query}
 The \{query\} resource is a synchronous web service resource that
@@ -231,7 +231,7 @@ resource.
 As a DALI-sync resource, the parameters for a request may be submitted
 using an HTTP GET (query string) or POST action.
 
-Object Visibility services advertise their availability as described in
+Object Observability services advertise their availability as described in
 the DALI standard. This system must provide mechanisms to fully
 characterize the service, including its non-compulsory and additional
 parameters.
@@ -286,7 +286,7 @@ indicator except in the special case of MAXREC=0, where the service
 respond with metadata-only (normal output document with no records).}
 
 \item{\textbf{UPLOAD}\\DALI UPLOAD parameter is not used by this version
-of ObjVisSAP. The use case of uploading lists of coordinates is covered
+of ObjObsSAP. The use case of uploading lists of coordinates is covered
 by the multiple-valued parameters values.}
 
 \item{\textbf{POS}\\The service \textbf{MUST }support the
@@ -307,14 +307,14 @@ been removed for simplicity.}
 
 \item{\textbf{TIME}\\The service \textbf{MUST} support the
 \textbf{TIME} parameter, to specify the time coverage in range-list form
-to check for object visibility. The unit of \textbf{TIME} parameter must be
+to check for object observability. The unit of \textbf{TIME} parameter must be
 expressed in MJD. The format of the range list is the one defined by other
 IVOA S*APs protocols like SSAP \citep{std:SSAP}, where the format of a
 range is defined by '$t_{min}\slash t_{max}$'. If the range is defined
 as an open range without the lower value of the range like '$\slash t_{max}$',
 $t_{min}$ will be interpreted as now.\\
 
-\textbf{Example:} to query for object visibility of the coordinate
+\textbf{Example:} to query for object observability of the coordinate
 (10.68,41,27) and end time for the periods between 11-April-2021 and 
 14-April-2021:
 %%%%%%%%%%%%%%%%%%%% starts here %%%%%%%%%%%%%%%%%%%%
@@ -323,7 +323,7 @@ $t_{min}$ will be interpreted as now.\\
 \begin{tabular}{|l|l|}
 \hline
 \begin{lstlisting}[language=SQL]
-http://xmmvischeck.esac.esa.int:8080/objvissap/query?
+http://xmmvischeck.esac.esa.int:8080/ObjObsSAP/query?
 POS=10.68,41.27&TIME=59522/59532
 \end{lstlisting}
 \\
@@ -361,7 +361,7 @@ check to those time periods with at least the minimum visibility specified
 in the parameter. The unit of \textbf{VIS\_MIN} parameters must be expressed
 in seconds.\par
 \textbf{Example:} The input parameter listing below from the Object
-Visibility Simple Access Protocol shows that in addition to supporting
+Observability Simple Access Protocol shows that in addition to supporting
 the required parameters (POS, TIME), it also supports the free
 parameter VIS\_MIN.
 %%%%%%%%%%%%%%%%%%%% starts here %%%%%%%%%%%%%%%%%%%%
@@ -370,11 +370,11 @@ parameter VIS\_MIN.
 <VOTABLE xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
 xsi:noNamespaceSchemaLocation="xmlns:http://www.ivoa.net/xml/
 VOTable/VOTable-1.1.xsd"
-xmlns:ovdm="http://www.ivoa.net/xml/ObjectVisibilityDM/
-ObjectVisibilityDM-v1.0.xsd" version="1.0">
+xmlns:ovdm="http://www.ivoa.net/xml/ObjectObservabilityDM/
+ObjectObservabilityDM-v1.0.xsd" version="1.0">
 <RESOURCE type="results">
 <DESCRIPTION>
-Object Visibility Simple Access Protocol
+Object Observability Simple Access Protocol
 </DESCRIPTION>
 <INFO name="QUERY_STATUS" value="OK"/>
 <PARAM name="INPUT:POS" datatype="char" arraysize="*"
@@ -414,17 +414,17 @@ arrays.}
 \end{itemize}
 
 \subsection{Availability: VOSI-availability}
-A web service with ObjVisSAP capabilities  \citep{2017ivoa.spec.0524G} must have a
+A web service with ObjObsSAP capabilities  \citep{2017ivoa.spec.0524G} must have a
 VOSI-availability resource as described in DALI \citep{2017ivoa.spec.0517D}.
 
 \subsection{Capabilities: VOSI-capabilities}
-A web service with ObjVisSAP capabilities must have a VOSI-capabilities
+A web service with ObjObsSAP capabilities must have a VOSI-capabilities
 resource as described in DALI. The standardID for the \{query\}
 capability is:
 
 %%%%%%%%%%%%%%%%%%%% starts here %%%%%%%%%%%%%%%%%%%%
 \begin{lstlisting}[language=SQL]
-ivo://ivoa.net/std/ObjVisSAP#query-0.3
+ivo://ivoa.net/std/ObjObsSAP#query-0.3
 \end{lstlisting}
 %%%%%%%%%%%%%%%%%%%% ends here %%%%%%%%%%%%%%%%%%%%
 All DAL services must implement the /\textit{capabilities} resource.
@@ -441,21 +441,21 @@ not require a registry extension schema:
  <capability standardID="ivo://ivoa.net/std/VOSI#capabilities">
   <interface xsi:type="vs:ParamHTTP" version="1.0">
    <accessURL use="base">
-     http://example.com/ObjVisSAP/capabilities
+     http://example.com/ObjObsSAP/capabilities
    </accessURL>
   </interface>
  </capability>
  <capability standardID="ivo://ivoa.net/std/VOSI#availability">
   <interface xsi:type="vs:ParamHTTP" version="1.0">
    <accessURL	use="full">
-    http://example.com/ObjVisSAP/availability
+    http://example.com/ObjObsSAP/availability
    </accessURL>
   </interface>
  </capability>
- <capability standardID="ivo://ivoa.net/std/ObjVisSAP#query-0.3">
+ <capability standardID="ivo://ivoa.net/std/ObjObsSAP#query-0.3">
   <interface xsi:type="vs:ParamHTTP" role="std"	version="0.3">
    <accessURL>
-    http://example.com/ObjVisSAP/query
+    http://example.com/ObjObsSAP/query
    </accessURL>
   </interface>
 <!-- service details from extension schema could go here -->
@@ -505,7 +505,7 @@ Content-Encoding & encoding/compression of the response (if applicable)
 Since the \{query\} response is usually dynamically generated, the
 Content-Length and Last-Modified headers cannot usually be set.\\
 
-The output returned by a ObjVisSAP service is a VOTable , an XML table
+The output returned by a ObjObsSAP service is a VOTable , an XML table
 format, returned with a MIME-type of "application/x-votable+xml". The
 table lists all the visibility periods computed for the given
 coordinates and time period in the server. The following requirements
@@ -542,7 +542,7 @@ for the given coordinates were found.
 \item Each record of the output VOTable \textbf{MUST} contain value
 for each FIELD.
 \item Every FIELD \textbf{SHOULD} contain a utype reference to the
-object visibility Data Model whenever possible.
+object observability Data Model whenever possible.
 \item A standard column \textbf{MUST} have a defined utype and a
 defined UCD as described in next section
 \item A standard column could appear multiple times with different
@@ -561,8 +561,8 @@ namespace
 
 %%%%%%%%%%%%%%%%%%%% starts here %%%%%%%%%%%%%%%%%%%%
 \begin{lstlisting}[language=XML]
-xmlns:ovdm="http://www.ivoa.net/xml/ObjectVisibilityDM/
-ObjectVisibilityDM-v1.0.xsd"
+xmlns:ovdm="http://www.ivoa.net/xml/ObjectObservabilityDM/
+ObjectObservabilityDM-v1.0.xsd"
 \end{lstlisting}
 %%%%%%%%%%%%%%%%%%%% ends here %%%%%%%%%%%%%%%%%%%%
 
@@ -649,10 +649,10 @@ defined shortname for the facility. \\
 Examples: HST/WFPC2, VLT/FORS2, SKA1/LOW11, etc}
 \end{itemize}
 
-\subsubsection{ObjVisSAP \{query\} Service Descriptor}
+\subsubsection{ObjObsSAP \{query\} Service Descriptor}
 The DataLink specification describes a mechanism for describing a
 service within a VOTable resource and recommends that services can
-describe themselves with a special resource with name="this". ObjVisSAP
+describe themselves with a special resource with name="this". ObjObsSAP
 \{query\} responses should include a descriptor describing both standard
 and custom query parameters (if applicable). The descriptor for a
 service with standard parameters (see 3.1) would be:\\
@@ -661,9 +661,9 @@ service with standard parameters (see 3.1) would be:\\
 \begin{lstlisting}[language=XML]
 <RESOURCE type="meta" utype="adhoc:service" name="this">
 <PARAM name="standardID" datatype="char" arraysize="*"
-    value="ivo://ivoa.net/std/ObjVisSAP#query-0.3"/>
+    value="ivo://ivoa.net/std/ObjObsSAP#query-0.3"/>
 <PARAM name="accessURL" datatype="char" arraysize="*"
-    value="http://example.com/ObjVisSAP/query"/>
+    value="http://example.com/ObjObsSAP/query"/>
  <GROUP name="inputParams">
   <PARAM name="pos" datatype="char" arraysize="*"/>
   <PARAM name="time" datatype="float" arraysize="*"	 unit="d"/>
@@ -686,16 +686,16 @@ described
 xsi:noNamespaceSchemaLocation="
 xmlns:http://www.ivoa.net/xml/VOTable/VOTable-1.1.xsd"
 xmlns:ssldm="http://www.ivoa.net/xml/
-ObjectVisibilityDM/ObjectVisibilityDM-v1.0.xsd"
+ObjectObservabilityDM/ObjectObservabilityDM-v1.0.xsd"
 version="1.0">
 <RESOURCE type="results">
 <DESCRIPTION>
 European Space Astronomy Centre. XMM-Newton SOC -
-Object Visibility Simple Access Protocol (ObjVisSAP)
+Object Observability Simple Access Protocol (ObjObsSAP)
 </DESCRIPTION>
 <INFO name="QUERY_STATUS" value="OK"/>
 <INFO name="SERVICE PROTOCOL" value="1.0">
-ObjVisSAP
+ObjObsSAP
 </INFO>
 <INFO name="POS" value="10.68,41.27"/>
 <INFO name="TIME" value="58171.45833/58321.958333"/>
@@ -734,7 +734,7 @@ ucd="time.duration" datatype="float" unit="s"/>
 \renewcommand{\thesection}{\Alph{section}.\arabic{section}}
 \setcounter{section}{0}
 \begin{appendices}
-\section{ObjVisSAP data model summary}
+\section{ObjObsSAP data model summary}
 \FloatBarrier
 \begin{table}[h]
 \tiny

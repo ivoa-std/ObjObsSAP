@@ -1,7 +1,7 @@
 name: Update PDF Preview
 
 env:
-  doc_name: ObjVisSAP
+  doc_name: ObjObsSAP
 
 on:
   push:
