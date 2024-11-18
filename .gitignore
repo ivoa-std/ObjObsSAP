@@ -5,8 +5,8 @@
 **/*.dvi
 **/*.log
 **/*.out
-**/ObsLocTAP.synctex.gz
-**/ObsLocTAP.ps
-**/ObsLocTAP.pdf
-**/ObsLocTAP.fls
-**/ObsLocTAP.fdb_latexmk
+**/ObjObsSAP.synctex.gz
+**/ObjObsSAP.ps
+**/ObjObsSAP.pdf
+**/ObjObsSAP.fls
+**/ObjObsSAP.fdb_latexmk
