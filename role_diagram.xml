@@ -21,7 +21,7 @@ with missing dependencies.
 
 	<!-- DAL: x=655, y=155..435 -->
 	<rec name="DALI" x="310" y="290"/>
-	<thisrec name="ObjVisSAP" x="655" y="300"/>
+	<thisrec name="ObjObsSAP" x="655" y="300"/>
 	<rec name="DataLink" x="610" y="400"/>
 
 	<!-- Data Models: x=430..580, y=250..400 -->
