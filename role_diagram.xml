@@ -13,7 +13,6 @@ with missing dependencies.
 <archdiag xmlns="http://ivoa.net/archdiag">
 	<!-- Registry: x=55, y=150..450 -->
 	<rec name="VODataService" x="55" y="350"/>
-
 	<rec name="Identifiers" x="125" y="425"/>
 
 	<!-- Apps: all over the place -->
