@@ -14,7 +14,7 @@ DOCTYPE = WD
 
 # An e-mail address of the person doing the submission to the document
 # repository (can be empty until a make upload is being made)
-AUTHOR_EMAIL=jesusjuansalgado@gmail.com
+AUTHOR_EMAIL=aitor.ibarra@ext.esa.int
 
 # Source files for the TeX document (but the main file must always
 # be called $(DOCNAME).tex
