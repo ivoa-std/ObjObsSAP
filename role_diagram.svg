@@ -48,7 +48,7 @@
 
 	
 	<svg x="310" y="290"><rect width="90" height="18" x="0" y="0" class="rec"/><text class="doclabel" x="45" y="12.5">DALI</text></svg>
-	<svg x="655" y="300"><rect width="90" height="18" x="0" y="0" class="thisrec"/><text class="doclabel" x="45" y="12.5">ObjVisSAP</text></svg><svg x="655" y="300"><ellipse rx="60" ry="15" cx="45" cy="9" fill="none" stroke="red" stroke-width="3"/></svg>
+	<svg x="655" y="300"><rect width="90" height="18" x="0" y="0" class="thisrec"/><text class="doclabel" x="45" y="12.5">ObjObsSAP</text></svg><svg x="655" y="300"><ellipse rx="60" ry="15" cx="45" cy="9" fill="none" stroke="red" stroke-width="3"/></svg>
 	<svg x="610" y="400"><rect width="90" height="18" x="0" y="0" class="rec"/><text class="doclabel" x="45" y="12.5">DataLink</text></svg>
 
 	
