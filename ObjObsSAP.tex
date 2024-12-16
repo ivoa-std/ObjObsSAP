@@ -13,7 +13,8 @@
 \usepackage{adjustbox}
 \usepackage{lscape}
 \usepackage[title]{appendix}
-
+\usepackage{tabularx}
+\newcolumntype{L}{>{\raggedright\arraybackslash}X}
 \usepackage[english]{babel}
 
 %Import the natbib package and sets a bibliography  and citation styles
@@ -844,5 +845,25 @@ telescope/antenna/facility to which this range period is applicable
 \end{adjustbox}
 \end{table}
 \FloatBarrier
+
+\section{Changes from Previous Versions}
+
+\begin{table}[h]
+
+\begin{tabularx}{\linewidth}{|L|c|l|}
+\hline
+\textbf{Change} & \textbf{Section} & \textbf{Version} \\
+\hline
+Visibility concept has been replaced by observability & all & WD-20241027 \\
+\hline
+min\_vis and max\_vis parameters have been replaced by 
+min\_obs and max\_obs, respectively & all  & WD-20241027 \\
+\hline
+t\_visibility column changed by t\_observability & all & WD-20241027 \\
+\hline
+\end{tabularx}
+\end{table}
+
+
 \end{appendices}
 \end{document}
