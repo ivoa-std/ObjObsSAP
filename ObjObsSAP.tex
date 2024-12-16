@@ -606,13 +606,15 @@ datatype="float", ucd="em.energy" and unit="m" , containing the low energy bound
 
 \item {Exactly one field \textbf{MAY }have a name="\textbf{em\_max}" with\\
 utype="\textbf{Char.Spectral.Axis.Energy.Max}"\\
-datatype="float", ucd="em.energy" and unit="m" , containing the high energy bound for this particular sky position and
-observability time interval.}
+datatype="float", ucd="em.energy" and unit="m" , containing the high energy bound for this particular sky position and observability time interval.}
+
+\item {Exactly one field \textbf{MAY }have a name="\textbf{max\_obs}" with\\
+utype="\textbf{Char.TimeAxis.Coverage.Support.Extent}"\\ with 
+datatype="float", ucd="time.duration" and unit="s" , containing the maximum observavility period for the given sky position at the given time.} 
 
 \item {Exactly one field \textbf{MAY }have a name="\textbf{elevation\_min}" with\\
 utype="\textbf{Char.Position.Axis.Min}"\\ with
-datatype="float", ucd="angle.validity" and unit="deg" , containing the minimum elevation for this particular sky position and observability
-time interval.}
+datatype="float", ucd="angle.validity" and unit="deg" , containing the minimum elevation for this particular sky position and observability time interval.}
 
 \item {Exactly one field \textbf{MAY }have a name="\textbf{elevation\_max}" with\\
 utype="\textbf{Char.Position.Axis.Max}"\\
