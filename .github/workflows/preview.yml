@@ -1,7 +1,7 @@
 name: Update PDF Preview
 
 env:
-  doc_name: ObjVisSAP
+  doc_name: ObjObsSAP
 
 on:
   push:
@@ -27,7 +27,7 @@ jobs:
         sudo snap install pdftk
 
     - name: Build the document
-      run: make ${{ env.doc_name }}-draft.pdf
+      run: make biblio ${{ env.doc_name }}-draft.pdf
 
     - name: Check the output
       run: |
@@ -35,10 +35,10 @@ jobs:
         test -f ${{ env.doc_name }}.bbl
 
     - name: Move the auto-pdf-preview tag
-      uses: weareyipyip/walking-tag-action@v1
+      uses: weareyipyip/walking-tag-action@v2
       with:
-        TAG_NAME: auto-pdf-preview
-        TAG_MESSAGE: |
+        tag-name: auto-pdf-preview
+        tag-message: |
           Last commit taken into account for the automatically updated PDF preview of this IVOA document.
       env:
         GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
