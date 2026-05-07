@@ -340,6 +340,15 @@ the service response like:
 }
 \end{itemize}
 
+If no \textbf{TIME} parameter is provided, a service \textbf{MAY} apply a default
+time range for which it can confidently provide valid results.
+A client \textbf{MAY} request observability data for a longer time range;
+however, a service \textbf{MAY} impose a maximum allowable future time
+range beyond which results are not returned.
+
+A service \textbf{SHOULD} only return results for which it has reasonable
+confidence in the validity of the computed observability.
+
 See \textit{Successful Response} section for more info about valid
 VOTable res\-pon\-ses.
 
