@@ -52,10 +52,11 @@
 \author{James Dempsey}
 \author{Markus Demleitner}
 \author{María Díaz Trigo}
-\author{Jaime Kennea}
+\author{Jamie A. Kennea}
 \author{Mark Kettenis}
 \author{Peter Kretschmar}
 \author{Erik Kuulkers}
+\author{Cristina García-Miró}
 \author{Giorgio Matt}
 \author{Bruno Merín}
 \author{Marco Molinaro}
@@ -212,7 +213,7 @@ specification.
 \hline
 DALI-examples & /examples & no \\
 \hline
-VOSI-availability & /availability & yes \\
+VOSI-availability & /availability & no \\
 \hline
 VOSI-capabilities & /capabilities & yes \\
 \hline
@@ -278,20 +279,16 @@ satellite orbital elements change frequently.
 
 \begin{itemize}
 \item{\textbf{MAXREC}\\MAXREC parameter is defined in DALI and allows
-the client to limit the number or records in the response. A service
+the client to limit the number of records in the response. A service
 implementation may also impose default and maximum values for this limit.
-However, the limit is determined, if the output is truncated due to the
+However the limit is determined, if the output is truncated due to the
 limit the server must indicate this using an overflow (section 4.1)
 indicator except in the special case of MAXREC=0, where the service
-respond with metadata-only (normal output document with no records).}
-
-\item{\textbf{UPLOAD}\\DALI UPLOAD parameter is not used by this version
-of ObjObsSAP. The use case of uploading lists of coordinates is covered
-by the multiple-valued parameters values.}
+responds with metadata-only (normal output document with no records).}
 
 \item{\textbf{POS}\\The service \textbf{MUST }support the
 \textbf{POS} parameter, to specify the position in the sky to check the observability. 
-The coordinate values are specified in list format (comma separated) with no embedded white
+The values are ICRS RA and Dec in decimal degrees. The coordinate values are specified in list format (comma separated) with no embedded white
 space.\\
 Example:\\
 %%%%%%%%%%%%%%%%%%%% starts here %%%%%%%%%%%%%%%%%%%%
@@ -299,19 +296,15 @@ Example:\\
 POS=52,-27.8
 \end{lstlisting}
 %%%%%%%%%%%%%%%%%%%% ends here %%%%%%%%%%%%%%%%%%%%
-\par
-POS defaults to right-ascension and declination in decimal degrees in
-the ICRS coordinate system. This parameter has been defined in line with
-other IVOA S*APs protocols although the optional coordinate system has
-been removed for simplicity.}
+}
 
 \item{\textbf{TIME}\\The service \textbf{MUST} support the
 \textbf{TIME} parameter, to specify the time coverage in range-list form
 to check for object observability. The unit of \textbf{TIME} parameter must be
 expressed in MJD. The format of the range list is the one defined by other
-IVOA S*APs protocols like SSAP \citep{std:SSAP}, where the format of a
+IVOA S*APs protocols like SSAP \citep{2012ivoa.spec.0210T}, where the format of a
 range is defined by '$t_{min}\slash t_{max}$'. If the range is defined
-as an open range without the lower value of the range like '$\slash t_{max}$',
+as an open range without the lower value of the range like '$t_{max}$',
 $t_{min}$ will be interpreted as now.\\
 
 \textbf{Example:} to query for object observability of the coordinate
@@ -373,44 +366,21 @@ in seconds.\par
 observability Simple Access Protocol shows that in addition to supporting
 the required parameters (POS, TIME), it also supports the free
 parameter MIN\_OBS.
+
 %%%%%%%%%%%%%%%%%%%% starts here %%%%%%%%%%%%%%%%%%%%
-\begin{lstlisting}[language=XML]
-<?xml version="1.0" encoding="UTF-8"?>
-<VOTABLE xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-xsi:noNamespaceSchemaLocation="xmlns:http://www.ivoa.net/xml/
-VOTable/VOTable-1.1.xsd"
-xmlns:ovdm="http://www.ivoa.net/xml/ObjectObservabilityDM/
-ObjectobservabilityDM-v1.0.xsd" version="1.0">
-<RESOURCE type="results">
-<DESCRIPTION>
-Object Observability Simple Access Protocol
-</DESCRIPTION>
-<INFO name="QUERY_STATUS" value="OK"/>
-<PARAM name="INPUT:POS" datatype="char" arraysize="*"
-value="10.68">
-<DESCRIPTION>
-Specify the right ascension and declination coordinate.
-To be specified in Equatorial Coordinates J2000.
-</DESCRIPTION>
-</PARAM>
-<PARAM name="INPUT:TIME"
-utype="Char.TimeAxis.Coverage.Bounds.Limits"
-datatype="float"
-unit="d" value="58171.45833/58321.958333">
-<DESCRIPTION>
-Specify the time coverage (epoch), specified in range-list form
-to check for observability. To be specified in MJD.
-</DESCRIPTION>
-</PARAM>
-<PARAM name="INPUT:MIN_OBS" ucd="time.duration"
-utype="Char.TimeAxis.Coverage.Duration" unit="s"
-datatype="float">
-<DESCRIPTION> Minimum observability time interval
-</DESCRIPTION>
-</PARAM>
-... ... ... ...
-\end{lstlisting}
-%%%%%%%%%%%%%%%%%%%% ends here %%%%%%%%%%%%%%%%%%%%
+\begin{table}[h]
+  \centering
+  \begin{tabular}{|l|l|}
+  \hline
+  \begin{lstlisting}[language=SQL]
+  http://xmmvischeck.esac.esa.int:8080/objobssap/query?
+  POS=10.68,41.27&TIME=59522/59532&MIN_OBS=5000
+  \end{lstlisting}
+  \\
+  \hline
+  \end{tabular}
+  \end{table}
+  %%%%%%%%%%%%%%%%%%%% ends here %%%%%%%%%%%%%%%%%%%%
 
 }
 \item{\textbf{FACILITY}\\A service \textbf{MAY} have a search parameter
@@ -423,8 +393,10 @@ arrays.}
 \end{itemize}
 
 \subsection{Availability: VOSI-availability}
-A web service with ObjObsSAP capabilities  \citep{2017ivoa.spec.0524G} must have a
-VOSI-availability resource as described in DALI \citep{2017ivoa.spec.0517D}.
+%%A web service with ObjObsSAP capabilities  \citep{2017ivoa.spec.0524G} should have a
+%VOSI-availability resource as described in DALI \citep{2017ivoa.spec.0517D}.
+The use of the VOSI-availability resource is described in DALI \citep{2017ivoa.spec.0517D}.
+
 
 \subsection{Capabilities: VOSI-capabilities}
 A web service with ObjObsSAP capabilities must have a VOSI-capabilities
@@ -433,7 +405,7 @@ capability is:
 
 %%%%%%%%%%%%%%%%%%%% starts here %%%%%%%%%%%%%%%%%%%%
 \begin{lstlisting}[language=SQL]
-ivo://ivoa.net/std/ObjObsSAP#query-0.3
+ivo://ivoa.net/std/ObjObsSAP#query-1
 \end{lstlisting}
 %%%%%%%%%%%%%%%%%%%% ends here %%%%%%%%%%%%%%%%%%%%
 All DAL services must implement the /\textit{capabilities} resource.
@@ -447,13 +419,15 @@ not require a registry extension schema:
  xmlns:vosi="http://www.ivoa.net/xml/VOSICapabilities/v1.0"
  xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
  xmlns:vs="http://www.ivoa.net/xml/VODataService/v1.1">
+ 
  <capability standardID="ivo://ivoa.net/std/VOSI#capabilities">
   <interface xsi:type="vs:ParamHTTP" version="1.0">
-   <accessURL use="base">
+   <accessURL use="full">
      http://example.com/ObjObsSAP/capabilities
    </accessURL>
   </interface>
  </capability>
+
  <capability standardID="ivo://ivoa.net/std/VOSI#availability">
   <interface xsi:type="vs:ParamHTTP" version="1.0">
    <accessURL	use="full">
@@ -461,8 +435,9 @@ not require a registry extension schema:
    </accessURL>
   </interface>
  </capability>
- <capability standardID="ivo://ivoa.net/std/ObjObsSAP#query-0.3">
-  <interface xsi:type="vs:ParamHTTP" role="std"	version="0.3">
+
+ <capability standardID="ivo://ivoa.net/std/ObjObsSAP#query-1">
+  <interface xsi:type="vs:ParamHTTP" role="std"	version="1.0">
    <accessURL>
     http://example.com/ObjObsSAP/query
    </accessURL>
@@ -524,8 +499,8 @@ returns a list of observability periods:
 \newcounter{numberedCntBI}
 \begin{enumerate}
 \item The VOTable \textbf{MUST} contain a RESOURCE element identified
-with the tag type="results" should contain TABLE element which contains
-the results of the query. The VOTable is permitted to contain additional
+with the tag type="results", which in turn \textbf{MUST} contain a TABLE 
+element holding the results of the query. The VOTable is permitted to contain additional
 RESOURCE elements, but the usage of any such elements is not defined
 here. If multiple resources are present it is recommended that the query
 results be returned in the first resource element.
@@ -548,11 +523,9 @@ for the given coordinates were found.
 \begin{enumerate}
 \setcounter{enumi}{\thenumberedCntBI}
 \item Each table row represents a different observability period.
-\item Each record of the output VOTable \textbf{MUST} contain value
-for each FIELD.
 \item Every FIELD \textbf{SHOULD} contain a utype reference to the
 object observability Data Model whenever possible.
-\item A standard column \textbf{MUST} have a defined utype and a
+\item A standard column \textbf{SHOULD} have a defined utype and a
 defined UCD as described in next section
 \item A standard column could appear multiple times with different
 units. The way to uniquely identify one standard column is the
@@ -563,100 +536,95 @@ utype but different units, the column is uniquely identified by its
 utype and unit.
 \item Otherwise, a standard column is uniquely defined by its utype.
 \end{itemize}
-\item The VOTable \textbf{MUST} contain a reference to the OVDM
-namespace
 \setcounter{numberedCntBI}{\theenumi}
 \end{enumerate}
 
-%%%%%%%%%%%%%%%%%%%% starts here %%%%%%%%%%%%%%%%%%%%
-\begin{lstlisting}[language=XML]
-xmlns:ovdm="http://www.ivoa.net/xml/ObjectObservabilityDM/
-ObjectObservabilityDM-v1.0.xsd"
-\end{lstlisting}
-%%%%%%%%%%%%%%%%%%%% ends here %%%%%%%%%%%%%%%%%%%%
 
 \subsubsection{Standard output fields}
-A detailed reference of the data model can be found in Appendix A
+A comprehensive and detailed description of the Object Observability Data Model, 
+including its structure and components, can be found in the Appendix A.\\
+
+The output values have type either string or numeric.
+\begin{itemize}
+  \item string values have datatype="char" or datatype="unicodeChar",
+      and arraysize="*" or some other value indicating multiple characters.
+  \item numeric values have datatype="float" or datatype="double".
+\end{itemize}
+
+The list of the output fields are descrined below.
 
 \begin{itemize}
-\item {Exactly one field \textbf{MUST} have a name="\textbf{t\_validity}"
-with\\ utype=" \textbf{Char.TimeAxis.Coverage.Time}" with
-datatype="float", ucd="time.validity", unit="d" containing the date when the observability calculations will change.}
+\item {A numeric field with name="\textbf{t\_validity}" \textbf{MUST} be present  
+with utype="\textbf{Char.TimeAxis.Coverage.Time}" and unit="d", containing the date when the 
+observability calculations will change in MJD. It is RECOMMEND to annotate this column using the 
+TIMESYS element introduced in VOTABLE 1.4.}
 
-\item {Exactly one field \textbf{MAY} have a name="\textbf{validity\_accuracy}" 
-with datatype="char" and arraysize="*" containing the level of
-confidence of the validity range, with one of the following allowed
+\item {A numeric field with name="\textbf{t\_start}" \textbf{MUST} be present with\\
+utype="\textbf{Char.TimeAxis.Coverage.Bounds.Limits.StartTime}",\\
+ucd="time.start" and unit="d", containing the start of the observability period in MJD. 
+It is RECOMMEND to annotate this column using the TIMESYS element introduced in VOTABLE 1.4.}
+
+\item {A numeric field with name="\textbf{t\_stop}" \textbf{MUST} be present with\\
+utype="\textbf{Char.TimeAxis.Coverage.Bounds.Limits.StopTime}",\\
+ucd="time.end" and unit="d", containing the end of the observability period in MJD.
+It is RECOMMEND to annotate this column using the TIMESYS element introduced in VOTABLE 1.4.}
+
+\item {A numeric field with name="\textbf{t\_observability}" \textbf{MUST} be present with
+utype="\textbf{Char.TimeAxis.Coverage.Support.Extent}",\\
+ ucd="time.duration" and unit="s", containing the observability window duration in seconds.}
+
+\item {A string field with name="\textbf{validity\_accuracy}" \textbf{MAY} be present 
+containing the level of confidence of the validity range, with one of the following allowed
 values: HIGH, MEDIUM, LOW.}
 
-\item {Exactly one field \textbf{MAY} have a name="\textbf{
-validity\_predictor}" with datatype="char" and arraysize="*" with an
-identifier of the software used to calculate the observability.}
+\item {A string field with name="\textbf{validity\_predictor}" \textbf{MAY} be present with 
+an identifier of the software used to calculate the observability.}
 
-\item {Exactly one field \textbf{MUST} have a name="\textbf{t\_start}" with\\
-utype="\textbf{Char.TimeAxis.Coverage.Bounds.Limits.StartTime}"\\ with
-datatype="float",  ucd="time.start", unit="d" containing the start of the observability period.}
-
-\item {Exactly one field \textbf{MUST} have a name="\textbf{t\_stop}" with\\
-utype="\textbf{Char.TimeAxis.Coverage.Bounds.Limits.StopTime}"\\, with
-datatype="float", ucd="time.end" and unit="d" containing the end of the observability period.}
-
-\item {Exactly one field \textbf{MUST} have a name="\textbf{t\_observability}"
-with\\ utype="\textbf{Char.TimeAxis.Coverage.Support.Extent}"\\, with
-datatype="float", ucd="time.duration" and unit="s", containing the observability window duration in seconds.}
-
-\item {Exactly one field \textbf{MAY }have a name="\textbf{pos\_angle
-}" with\\
+\item {A numeric field with name="\textbf{pos\_angle}" \textbf{MAY } be present with
 utype="\textbf{Char.SpatialAxis.Coverage.Location.Coord.Position2D.Value2.C3}"\\
-datatype="float", ucd="pos.eq.pos\_angle" and
-unit="deg", containing the spacecraft position angle.}
+and unit="deg", containing the spacecraft position angle.}
 
-\item {Exactly one field \textbf{MAY }have a name="\textbf{em\_min}" with\\
-utype="\textbf{Char.Spectral.Axis.Energy.Min}"\\
-datatype="float", ucd="em.energy" and unit="m" , containing the low energy bound for this particular sky position and observability time interval.}
+\item {A numeric field with name="\textbf{em\_min}" \textbf{MAY } be present with\\
+utype="\textbf{Char.Spectral.Axis.Energy.Min}",
+ucd="em.energy" and unit="m", containing the low energy bound for 
+this particular sky position and observability time interval.}
 
-\item {Exactly one field \textbf{MAY }have a name="\textbf{em\_max}" with\\
-utype="\textbf{Char.Spectral.Axis.Energy.Max}"\\
-datatype="float", ucd="em.energy" and unit="m" , containing the high energy bound for this particular sky position and observability time interval.}
+\item {A numeric field with name="\textbf{em\_max}" \textbf{MAY } be present with\\
+utype="\textbf{Char.Spectral.Axis.Energy.Max}", 
+ucd="em.energy" and unit="m", containing the high energy bound for this 
+particular sky position and observability time interval.}
 
-\item {Exactly one field \textbf{MAY }have a name="\textbf{max\_obs}" with\\
-utype="\textbf{Char.TimeAxis.Coverage.Support.Extent}"\\ with 
-datatype="float", ucd="time.duration" and unit="s" , containing the maximum observavility period for the given sky position at the given time.} 
+\item {A numeric field with name="\textbf{max\_obs}" \textbf{MAY } be present with
+utype="\textbf{Char.TimeAxis.Coverage.Support.Extent}", \\
+ucd="time.duration" and unit="s", containing the maximum observavility period for 
+the given sky position at the given time.} 
 
-\item {Exactly one field \textbf{MAY }have a name="\textbf{elevation\_min}" with\\
-utype="\textbf{Char.Position.Axis.Min}"\\ with
-datatype="float", ucd="angle.validity" and unit="deg" , containing the minimum elevation for this particular sky position and observability time interval.}
+\item {A numeric field with name="\textbf{elevation\_min}" \textbf{MAY } be present with
+utype="\textbf{Char.Position.Axis.Min}" and unit="deg",
+containing the minimum elevation for this particular sky position and observability time interval.}
 
-\item {Exactly one field \textbf{MAY }have a name="\textbf{elevation\_max}" with\\
-utype="\textbf{Char.Position.Axis.Max}"\\
-datatype="float", ucd="angle.validity" and unit="deg", containing the maximum elevation for this particular sky position and 
-observability time interval.}
+\item {A numeric field with name="\textbf{elevation\_max}" \textbf{MAY } be present with
+utype="\textbf{Char.Position.Axis.Max}" and unit="deg",
+containing the maximum elevation for this particular sky position and observability time interval.}
 
-\item {Exactly one field \textbf{MAY }have a name="\textbf{moon\_sep\_min}" 
-datatype="float", ucd="angle.validity" and
-unit="deg" , containing the minimum Moon separation for this particular
-sky position and observability time interval.}
+\item {A numeric field with name="\textbf{moon\_sep\_min}" \textbf{MAY } be present with unit="deg", 
+containing the minimum Moon separation for this particular sky position and observability time interval.}
 
-\item {Exactly one field \textbf{MAY }have a name="\textbf{moon\_sep\_max}" 
-datatype="float", ucd="angle.validity" and
-unit="deg" , containing the maximum Moon separation for this particular
-sky position and observability time interval.}
+item {A numeric field with name="\textbf{moon\_sep\_max}" \textbf{MAY }be present with 
+unit="deg", containing the maximum Moon separation for this particular sky position and observability time interval.}
 
-\item {Exactly one field \textbf{MAY }have a name="\textbf{sun\_sep\_min}" with\\
-datatype="float", ucd="angle.validity" and
-unit="deg" , containing the minimum Sun separation for this particular
-sky position and observability time interval.}
+\item {A numeric field with name="\textbf{sun\_sep\_min}" \textbf{MAY }be present with
+unit="deg", containing the minimum Sun separation for this particular sky position and observability time interval.}
 
-\item {Exactly one field \textbf{MAY }have a name="\textbf{sun\_sep\_max}" with\\
-datatype="float", ucd="angle.validity" and
-unit="deg" , containing the maximum Sun separation for this particular
-sky position and observability time interval.}
+\item {A numeric field with name="\textbf{sun\_sep\_max}" \textbf{MAY }be present with
+unit="deg", containing the maximum Sun separation for this particular sky position and observability time interval.}
 
-\item {Exactly one field \textbf{MAY} have a name="\textbf{facility}" 
-with datatype="char" and arraysize="*", ucd="meta.id;instr.tel",\\
-utype="\textbf{Provenance.ObsConfig.Facility.name}",\\ 
+\item {A string field with name="\textbf{facility}" \textbf{MAY} be present\\
+with ucd="meta.id;instr.tel",\\
+utype="\textbf{Provenance.ObsConfig.Facility.name}",\\
 containing the identifier of the telescope/antenna/facility to which
 this range period is applicable. The value could be a data provider
-defined shortname for the facility. \\
+defined shortname for the facility. 
 Examples: HST/WFPC2, VLT/FORS2, SKA1/LOW11, etc}
 \end{itemize}
 
@@ -672,7 +640,7 @@ service with standard parameters (see 3.1) would be:\\
 \begin{lstlisting}[language=XML]
 <RESOURCE type="meta" utype="adhoc:service" name="this">
 <PARAM name="standardID" datatype="char" arraysize="*"
-    value="ivo://ivoa.net/std/ObjObsSAP#query-0.3"/>
+    value="ivo://ivoa.net/std/ObjObsSAP#query-1"/>
 <PARAM name="accessURL" datatype="char" arraysize="*"
     value="http://example.com/ObjObsSAP/query"/>
  <GROUP name="inputParams">
@@ -693,30 +661,26 @@ described
 %%%%%%%%%%%%%%%%%%%% starts here %%%%%%%%%%%%%%%%%%%%
 \begin{lstlisting}[language=SQL]
 <?xml version="1.0" encoding="UTF-8"?>
-<VOTABLE xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-xsi:noNamespaceSchemaLocation="
-xmlns:http://www.ivoa.net/xml/VOTable/VOTable-1.1.xsd"
-xmlns:ssldm="http://www.ivoa.net/xml/
-ObjectObservabilityDM/ObjectObservabilityDM-v1.0.xsd"
-version="1.0">
+<VOTABLE version="1.5"
+         xmlns="http://www.ivoa.net/xml/VOTable/v1.3">
 <RESOURCE type="results">
 <DESCRIPTION>
 European Space Astronomy Centre. XMM-Newton SOC -
 Object Observability Simple Access Protocol (ObjObsSAP)
 </DESCRIPTION>
 <INFO name="QUERY_STATUS" value="OK"/>
-<INFO name="SERVICE PROTOCOL" value="1.0">
-ObjObsSAP
-</INFO>
+<INFO name="standardID" value="ivo://ivoa.net/std/ObjObsSAP"/>
 <INFO name="POS" value="10.68,41.27"/>
 <INFO name="TIME" value="58171.45833/58321.958333"/>
+<TIMESYS ID="time-frame" timeorigin="MJD-origin"
+            refposition="GEOCENTER" timescale="UTC"/>
 <TABLE>
 <FIELD name="t_start" ucd="time.start"
 utype="Char.TimeAxis.Coverage.Bounds.Limits.StartTime"
-datatype="float" unit="s"/>
+datatype="float" unit="d" ref="time-frame"/>
 <FIELD name="t_stop" ucd="time.end"
 utype="Char.TimeAxis.Coverage.Bounds.Limits.StopTime"
-datatype="float" unit="s"/>
+datatype="float" unit="d" ref="time-frame"/>
 <FIELD name="t_observability"
 utype="Char.TimeAxis.Coverage.Support.Extent"
 ucd="time.duration" datatype="float" unit="s"/>
@@ -732,7 +696,7 @@ ucd="time.duration" datatype="float" unit="s"/>
 <TD>58299.438194</TD>
 <TD>78126</TD>
 </TR>
-... more lines data ...
+<!--... more lines data ...--> 
 </TABLEDATA>
 </DATA>
 </TABLE>
@@ -756,30 +720,29 @@ ucd="time.duration" datatype="float" unit="s"/>
 Name & UTYPE & UCD & Description & DataType & Unit \\
 \hline
 \textbf{t\_validity} & \textbf{Char.TimeAxis.Coverage.Time  \newline
-(MUST)} &
-time.validity & Date when the \newline
+(MUST)} & & Date when the \newline
 observability calculation will change (MJD) &
-float & d \\
+numeric & d \\
 \hline
 \textbf{validity\_accuracy} & \textbf{(MAY)} & & Level of confidence
 of the validity range \newline
-Accepted values= HIGH, MEDIUM, LOW & char, * & \\
+Accepted values= HIGH, MEDIUM, LOW & string & unitless \\
 \hline
 \textbf{validity\_predictor} & \textbf{(MAY)} & & Identifier (string
 free representation) of the software used to calculate the observability &
-char, * & \\
+string & unitless\\
 \hline
 \textbf{t\_start} & \textbf{
 Char.TimeAxis.Coverage.Bounds. \newline
 Limits.StartTime  \newline
 (MUST)} & time.start &
-observability window start time (MJD) & float & d \\
+observability window start time (MJD) & numeric & d \\
 \hline
 \textbf{t\_stop} & \textbf{
 Char.TimeAxis.Coverage.Bounds. \newline
 Limits.StopTime \newline
 (MUST)} & time.end &
-observability widow end time (MJD) & float & d \\
+observability widow end time (MJD) & numeric & d \\
 \hline
 \textbf{t\_observability} & \textbf{
 Char.TimeAxis.Coverage. \newline
@@ -790,14 +753,13 @@ observability duration window & float & s \\
 \textbf{pos\_angle} & \textbf{
 Char.SpatialAxis.Coverage.Location. \newline
 Coord.Position2D.Value2.C3  \newline
-(MAY)} &
-pos.eq.pos\_angle & Satellite position angle & float & deg \\
+(MAY)} & & Satellite position angle & numeric & deg \\
 \hline
 \textbf{em\_threshold} & \textbf{
 Char.Spectral.Axis.Energy.Threshold \newline
 (MAY)} & em.energy & Energy
 threshold for this particular sky position and observability time interval
-& float & m \\
+& numeric & m \\
 \hline
 \pagebreak
 \textbf{target\_name} & \textbf{Target.Name  \newline
@@ -807,48 +769,48 @@ Target Name & string & unitless \\
 \textbf{em\_min} & \textbf{Char.Spectral.Axis.Energy.Min \newline
 (MAY)} &
 em.energy & Energy minimum for this particular sky position and
-observability time interval & float & m \\
+observability time interval & numeric & m \\
 \hline
 \textbf{em\_max} & \textbf{Char.Spectral.Axis.Energy.Max \newline
 (MAY)} &
 em.energy & Energy maximum for this particular sky position and
-observability time interval & float & m \\
+observability time interval & numeric & m \\
 \hline
 \textbf{elevation\_min} & \textbf{
 Char.SpatialAxis.Coverage. \newline
 Extent.angular\_distance \newline
-(MAY)} & phys.angDist
+(MAY)} & 
 & Minimum elevation for this sky position and observability time interval &
-float & deg \\
+numeric & deg \\
 \hline
 \textbf{elevation\_max} & \textbf{
 Char.SpatialAxis.Coverage. \newline
 Extent.angular\_distance \newline
-(MAY)} & phys.angDist
+(MAY)} & 
 & Maximum elevation for this sky position and observability time interval &
-float & deg \\
+numeric & deg \\
 \hline
-\textbf{moon\_sep\_min} & \textbf{(MAY)} & phys.angDist & Minimum
+\textbf{moon\_sep\_min} & \textbf{(MAY)} &  & Minimum
 Moon separation for this sky position and observability time interval &
-float & deg \\
+numeric & deg \\
 \hline
-\textbf{moon\_sep\_max} & \textbf{(MAY)} & phys.angDist & Maximum
+\textbf{moon\_sep\_max} & \textbf{(MAY)} &  & Maximum
 Moon separation for this sky position and observability time interval &
-float & deg \\
+numeric & deg \\
 \hline
-\textbf{sun\_sep\_min} & \textbf{(MAY)} & phys.angDist & Minimum Sun
-separation for this sky position and observability time interval & float &
+\textbf{sun\_sep\_min} & \textbf{(MAY)} &  & Minimum Sun
+separation for this sky position and observability time interval & numeric &
 deg \\
 \hline
-\textbf{sun\_sep\_max} & \textbf{(MAY)} & phys.angDist & Maximum Sun
-separation for this sky position and observability time interval & float &
+\textbf{sun\_sep\_max} & \textbf{(MAY)} &  & Maximum Sun
+separation for this sky position and observability time interval & numeric &
 deg \\
 \hline
 \textbf{facility} & \textbf{Char.SpatialAxis.Coverage.Provenance.\newline ObsConfig.Facility.name} 
 \newline
 \textbf{(MAY)} & meta.id;instr.tel & Identifier of the 
 telescope/antenna/facility to which this range period is applicable 
-& string & \\
+& string & unitless\\
 \hline
 \end{tabular}
 \end{adjustbox}
@@ -869,6 +831,20 @@ min\_vis and max\_vis parameters have been replaced by
 min\_obs and max\_obs, respectively & all  & WD-20241027 \\
 \hline
 t\_visibility column changed by t\_observability & all & WD-20241027 \\
+\hline
+VOSI-availability adapted to DALI 1.2 & Section 3.2 & WD-20241118 \\
+\hline
+Reference to ICRS coordinate system updated & Section 3.1 & WD-20241118 \\
+\hline
+Registry query version updated & Section 3.3 & WD-20241118 \\
+\hline
+Reference to OVDM namespace removed. Requirements content updated. & Section 4.1 & WD-20241118 \\
+\hline
+UCD type time.validity, angle.validity, phys.angDist and pos.eq.pos\_angle removed. Datatype float and char replaced by string-valued. & Section 4.1.1 & WD-20241118 \\
+\hline
+UPLOAD option removed & Section 3.1.1 &  WD-20241118 \\
+\hline
+MIN\_OBS example updated & Section 3.1.2 &  WD-20241118 \\
 \hline
 \end{tabularx}
 \end{table}
