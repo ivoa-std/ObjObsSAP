@@ -299,17 +299,24 @@ POS=52,-27.8
 }
 
 \item{\textbf{TIME}\\The service \textbf{MUST} support the
-\textbf{TIME} parameter, to specify the time coverage in range-list form
-to check for object observability. The unit of \textbf{TIME} parameter must be
-expressed in MJD. The format of the range list is the one defined by other
-IVOA S*APs protocols like SSAP \citep{2012ivoa.spec.0210T}, where the format of a
-range is defined by '$t_{min}\slash t_{max}$'. If the range is defined
-as an open range without the lower value of the range like '$t_{max}$',
-$t_{min}$ will be interpreted as now.\\
+\textbf{TIME} parameter, to specify the time interval over which target observability is
+to be evaluated. The \textbf{TIME} parameter \textbf{MUST} be expressed as a numeric
+interval of two Modified Julian Dates (MJD), following
+the interval representation defined in Section 3.3.4
+of DALI 1.1 \citep{2017ivoa.spec.0517D}.
 
-\textbf{Example:} to query for object observability of the coordinate
-(10.68,41,27) and end time for the periods between 11-April-2021 and 
-14-April-2021:
+The interval consists of two floating-point values
+in days, separated by whitespace. Both bounds are
+inclusive and are interpreted using the UTC time scale.
+
+Services \textbf{MUST} support fractional MJD values with a
+precision of at least five decimal places, corresponding
+to a temporal resolution of 0.864 seconds.
+
+\textbf{Example:} to query for object observability at coordinates
+(10.68, 41.27) between 4 November 2021 (MJD 59522)
+and 14 November 2021 (MJD 59532):\\
+
 %%%%%%%%%%%%%%%%%%%% starts here %%%%%%%%%%%%%%%%%%%%
 \begin{table}[h]
 \centering
@@ -317,7 +324,7 @@ $t_{min}$ will be interpreted as now.\\
 \hline
 \begin{lstlisting}[language=SQL]
 http://xmmvischeck.esac.esa.int:8080/objobssap/query?
-POS=10.68,41.27&TIME=59522/59532
+POS=10.68,41.27&TIME=59522.00000\%2059532.00000
 \end{lstlisting}
 \\
 \hline
@@ -390,6 +397,19 @@ This could be used, e.g., to select observability ranges for telescopes
 arrays, preventing the need of registration of one service per telescopes
 for this kind of observatories. Also, this could be useful for antennas
 arrays.}
+\item{\textbf{RESPONSEFORMAT}\\The RESPONSEFORMAT parameter is defined in
+DALI \citep{2017ivoa.spec.0517D} and allows the client to specify the
+format of the response. The value is a MIME type. If the parameter is
+omitted, the service returns VOTable, the default output format. A
+service \textbf{MAY} support additional formats.\par
+\textbf{Example:}
+%%%%%%%%%%%%%%%%%%%% starts here %%%%%%%%%%%%%%%%%%%%
+\begin{lstlisting}[language=SQL]
+http://xmmvischeck.esac.esa.int:8080/objobssap/query?
+POS=10.68,41.27&TIME=59522/59532&RESPONSEFORMAT=application/x-votable+xml
+\end{lstlisting}
+%%%%%%%%%%%%%%%%%%%% ends here %%%%%%%%%%%%%%%%%%%%
+}
 \end{itemize}
 
 \subsection{Availability: VOSI-availability}
@@ -551,7 +571,7 @@ The output values have type either string or numeric.
   \item numeric values have datatype="float" or datatype="double".
 \end{itemize}
 
-The list of the output fields are descrined below.
+The list of the output fields are described below.
 
 \begin{itemize}
 \item {A numeric field with name="\textbf{t\_validity}" \textbf{MUST} be present  
@@ -610,7 +630,7 @@ containing the maximum elevation for this particular sky position and observabil
 \item {A numeric field with name="\textbf{moon\_sep\_min}" \textbf{MAY } be present with unit="deg", 
 containing the minimum Moon separation for this particular sky position and observability time interval.}
 
-item {A numeric field with name="\textbf{moon\_sep\_max}" \textbf{MAY }be present with 
+\item {A numeric field with name="\textbf{moon\_sep\_max}" \textbf{MAY }be present with 
 unit="deg", containing the maximum Moon separation for this particular sky position and observability time interval.}
 
 \item {A numeric field with name="\textbf{sun\_sep\_min}" \textbf{MAY }be present with
@@ -675,6 +695,9 @@ Object Observability Simple Access Protocol (ObjObsSAP)
 <TIMESYS ID="time-frame" timeorigin="MJD-origin"
             refposition="GEOCENTER" timescale="UTC"/>
 <TABLE>
+<FIELD name="t_validity"
+utype="Char.TimeAxis.Coverage.Time"
+datatype="float" unit="d" ref="time-frame"/>
 <FIELD name="t_start" ucd="time.start"
 utype="Char.TimeAxis.Coverage.Bounds.Limits.StartTime"
 datatype="float" unit="d" ref="time-frame"/>
@@ -687,11 +710,13 @@ ucd="time.duration" datatype="float" unit="s"/>
 <DATA>
 <TABLEDATA>
 <TR>
+<TD>58350.0</TD>
 <TD>58297.123611</TD>
 <TD>58297.436806</TD>
 <TD>27036</TD>
 </TR>
 <TR>
+<TD>58350.0</TD>
 <TD>58298.534028</TD>
 <TD>58299.438194</TD>
 <TD>78126</TD>
